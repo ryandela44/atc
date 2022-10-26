@@ -1,7 +1,8 @@
 #pragma once
 
-class Airspace {
+class Aircraft {
 public:
+    Aircraft();
 private:
     int x_coor;
     int y_coor;
