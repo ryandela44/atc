@@ -19,6 +19,7 @@ public:
         z = airspace.get_z_space() / 100;
     }
      void print_borders() {
+        scale();
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < z; ++j) {
                 if (i == 0 || i == y-1) {
