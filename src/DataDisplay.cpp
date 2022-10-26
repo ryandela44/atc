@@ -9,7 +9,7 @@ private:
     std::vector<Aircraft> all_aircrafts;
     Airspace airspace;
 public:
-    DataDislay(std::vector<Aircraft> all_aircrafts,Airspace airspace) {
+    DataDisplay(std::vector<Aircraft> all_aircrafts,Airspace airspace) {
         this->all_aircrafts = all_aircrafts;
         this->airspace = airspace;
     }
