@@ -25,7 +25,7 @@ public:
     }
 
     int get_z_space() {
-        return x_space + sea_level;
+        return x_space;
     }
 };
 
