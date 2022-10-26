@@ -3,13 +3,13 @@
 #include <iostream>
 #include <vector>
 
-class  DataDisplay{
+class DataDisplay {
 private:
-    int y,z;
-    std::vector<Aircraft> all_aircrafts;
+    int y, z;
+    std::vector <Aircraft> all_aircrafts;
     Airspace airspace;
 public:
-    DataDisplay(std::vector<Aircraft> all_aircrafts,Airspace airspace) {
+    DataDisplay(std::vector <Aircraft> all_aircrafts, Airspace airspace) {
         this->all_aircrafts = all_aircrafts;
         this->airspace = airspace;
     }
@@ -18,21 +18,21 @@ public:
         y = airspace.get_y_space() / 100;
         z = airspace.get_z_space() / 100;
     }
-     void print_borders() {
+
+    void print_borders() {
         scale();
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < z; ++j) {
-                if (i == 0 || i == y-1) {
-                    if (j != z-1) {
-                        std::cout << " - ";
-                    }
-                    else {
-                        std::cout << " - " << std::endl;
+                if (i == 0 || i == y - 1) {
+                    if (j != z - 1) {
+                        std::cout << "*";
+                    } else {
+                        std::cout << "*" << std::endl;
                     }
                 } else if (j == 0) {
-                    std::cout << " | ";
-                } else if (j == z-1) {
-                    std::cout << " | " << std::endl;
+                    std::cout << "*";
+                } else if (j == z - 1) {
+                    std::cout << "*" << std::endl;
                 } else {
                     std::cout << " ";
                 }
