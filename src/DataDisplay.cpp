@@ -32,7 +32,7 @@ public:
                 } else if (j == 0) {
                     std::cout << " | ";
                 } else if (j == z-1) {
-                    std::cout << " | " << endl;
+                    std::cout << " | " << std::endl;
                 } else {
                     std::cout << " ";
                 }
