@@ -36,11 +36,11 @@ public:
         return x_speed;
     }
 
-    int get_x_speed() {
+    int get_y_speed() {
         return y_speed;
     }
 
-    int get_x_speed() {
+    int get_z_speed() {
         return z_speed;
     }
 

@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    std::vector <Aircraft> v = {{10000, 10000, 10000}};
+    std::vector <Aircraft> v = {{0,10000, 10000, 10000,200,200,200}};
     Airspace airspace;
     DataDisplay display(v, airspace);
     display.print_borders();

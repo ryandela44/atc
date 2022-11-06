@@ -6,9 +6,5 @@ private:
     Airspace airspace;
     DataDisplay display;
 public:
-    Radar(std::vector<Aircraft> aircrafts, Airspace airspace, DataDisplay display, ) {
-        this->aircrafts = aircrafts;
-        this->airspace = airspace;
-        this->display = display;
-    }
+    Radar(std::vector<Aircraft> aircrafts, Airspace airspace, DataDisplay display) : aircrafts(aircrafts), airspace(airspace), display(display) {};
 };

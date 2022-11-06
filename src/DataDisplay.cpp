@@ -9,10 +9,7 @@ private:
     std::vector <Aircraft> all_aircrafts;
     Airspace airspace;
 public:
-    DataDisplay(std::vector <Aircraft> all_aircrafts, Airspace airspace) {
-        this->all_aircrafts = all_aircrafts;
-        this->airspace = airspace;
-    }
+    DataDisplay(std::vector <Aircraft> all_aircrafts, Airspace airspace) : all_aircrafts(all_aircrafts), airspace(airspace) {};
 
     void scale() {
         y = airspace.get_y_space() / 100;
