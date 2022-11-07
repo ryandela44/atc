@@ -44,6 +44,18 @@ public:
         return z_speed;
     }
 
+    void update_speed(int x_speed, int y_speed,int z_speed) {
+        this->x_speed = x_speed;
+        this->y_speed = y_speed;
+        this->z_speed = z_speed;
+    }
+
+    void update_position(int x_coor, int y_coor, int z_coor) {
+        this->x_coor = x_coor;
+        this->y_coor = y_coor;
+        this->z_coor = z_speed;
+    }
+
 private:
     int id;
     int x_coor;
