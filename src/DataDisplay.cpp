@@ -6,10 +6,10 @@
 
 class DataDisplay {
 private:
-    int y,z;
+    int x, y;
     std::vector <Aircraft> aircrafts;
     Airspace airspace;
-    std::vector<std::tuple<int,int>> positions;
+    std::vector <std::tuple<int, int>> positions;
 public:
     DataDisplay(std::vector <Aircraft> aircrafts, Airspace airspace) : aircrafts(aircrafts), airspace(airspace) {};
 
@@ -18,40 +18,35 @@ public:
     }
 
     void print_borders() {
+        x = scale(airspace.get_x_space());
         y = scale(airspace.get_y_space());
-        z = scale(airspace.get_z_space());
 
-        for (int i = 0; i < y; i++) {
-            for (int j = 0; j < z; j++) {
-                if (i == 0 || i == y - 1) {
-                    if (j != z - 1) {
-                        std::cout << "*";
-                    } else {
-                        std::cout << "*" << std::endl;
-                    }
-                } else if (j == 0) {
-                    std::cout << "*";
-                } else if (j == z - 1) {
-                    std::cout << "*" << std::endl;
-                } else if  (aircrafts.empty()) {
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                if ((i == 0 && j != y-1) || (i == x-1 && j!=y-1) || j == 0) {
+                    std::cout << " * ";
+                }
+                else if (j == y-1) {
+                    std::cout << " * " << std::endl;
+                }
+                else if  (aircrafts.empty()) {
                     std::cout << " ";
                 }
                 else {
                     for (auto aircraft : aircrafts) {
-                        if (i == scale(aircraft.get_y_coor()) && j == scale(aircraft.get_z_coor())) {
-                            positions.push_back(std::make_tuple(i,j));
+                        if (i == (100 - scale(aircraft.get_x_coor())) && j == scale(aircraft.get_y_coor())) {
                             std::cout << std::to_string(aircraft.get_id());
+                            positions.push_back(std::make_tuple(i,j));
                         } else {
-                            std::vector<int>::iterator it;
-                            it = std::find(positions.begin(), positions.end(), std::make_tuple(i,j));
-                            if (it != positions.end()) {
+                            auto res = std::find(positions.begin(), positions.end(), std::make_tuple(i,j));
+                            if (res == positions.end()) {
                                 std::cout << " ";
                             }
                         }
                     }
                 }
-                }
             }
         }
+    }
 
 };
