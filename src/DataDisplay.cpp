@@ -7,17 +7,17 @@
 class DataDisplay {
 private:
     int x, y;
-    std::vector <Aircraft> aircrafts;
-    Airspace airspace;
     std::vector <std::tuple<int, int>> positions;
 public:
-    DataDisplay(std::vector <Aircraft> aircrafts, Airspace airspace) : aircrafts(aircrafts), airspace(airspace) {};
+    DataDisplay() {
+
+    };
 
     int scale(int param) {
         return param / 100;
     }
 
-    void print_borders() {
+    void print_borders(std::vector <Aircraft> aircrafts, Airspace airspace) {
         x = scale(airspace.get_x_space());
         y = scale(airspace.get_y_space());
 
