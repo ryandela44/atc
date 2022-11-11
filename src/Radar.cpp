@@ -14,7 +14,13 @@ public:
     void interrogate() {
         print();
         for (auto aircraft: aircrafts) {
-
+            std::cout << std::to_string(aircraft.get_id()) << std::endl;
+            std::cout
+                    << "Position : " + "(" + std::to_string(aircraft.get_x_coor()) + "," + std::to_string(aircraft.get_y_coor()) + ")"
+                    << std::endl;
+            std::cout << "Altitude : " + std::to_string(aircraft.get_z_coor()) << std::endl;
+            std::cout << "Speed : " + "(" +std::to_string(aircraft.get_x_speed()) + "," +
+                         std::to_string(aircraft.get_y_speed()) + "," + std::to_string(aircraft.get_z_speed()) + ")" << std::endl;
         }
     }
 
