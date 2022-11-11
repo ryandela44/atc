@@ -53,7 +53,7 @@ public:
     void update_position(int x_coor, int y_coor, int z_coor) {
         this->x_coor = x_coor;
         this->y_coor = y_coor;
-        this->z_coor = z_speed;
+        this->z_coor = z_coor;
     }
 
 private:
