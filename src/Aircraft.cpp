@@ -5,9 +5,10 @@
  *      Author: coen320
  */
 #include <pthread.h>
+#include "ClientServer.cpp"
 class Aircraft {
 public:
-    Aircraft(int id, int x_coor, int y_coor, int z_coor, int x_speed,int y_speed,int z_speed) {
+    Aircraft(int id, int x_coor, int y_coor, int z_coor, int x_speed,int y_speed,int z_speed, ClientServer server) {
         this->id = id;
         this->x_coor = x_coor;
         this->y_coor = y_coor;
@@ -15,6 +16,7 @@ public:
         this->x_speed = x_speed;
         this->y_speed = y_speed;
         this->z_speed = z_speed;
+        this->server = server;
         rc = pthread_attr_init(&attr);
         if (!rc) {
         }
@@ -61,6 +63,7 @@ public:
         this->x_speed = x_speed;
         this->y_speed = y_speed;
         this->z_speed = z_speed;
+        server.send(get_x_coor());
         return NULL;
     }
 
@@ -71,6 +74,7 @@ public:
         }
         pthread_join(pthread, NULL);
     }
+
 
 private:
     int id;
@@ -83,4 +87,5 @@ private:
     int rc;
     pthread_attr_t attr;
     pthread_t pthread;
+    ClientServer server;
 };
