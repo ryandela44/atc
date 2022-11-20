@@ -9,6 +9,7 @@
 
 #include "Aircraft.h"
 #include "Airspace.h"
+#include "ComputerSystem.h"
 #include <iostream>
 #include <vector>
 #include <tuple>
@@ -17,8 +18,9 @@ class DataDisplay {
 private:
     int x, y;
     std::vector <std::tuple<int, int>> positions;
+    ComputerSystem computer_system;
 public:
-    DataDisplay();
+    DataDisplay(ComputerSystem computer_system);
 
     int scale(int param);
 

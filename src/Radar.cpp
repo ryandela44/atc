@@ -1,19 +1,16 @@
 #include "Radar.h"
 
-Radar::Radar(std::vector <Aircraft> aircrafts, Airspace airspace, DataDisplay display, Server server) : aircrafts(aircrafts),
-                                                                                         airspace(airspace),
-                                                                                         display(display), server(server) {
-
-};
-
-void Radar::init() {
-	//pthread_create(&thread_id, NULL,radar_start_routine,(void *) this);
+Radar::Radar(Server server) : server(server) {
 }
 
-void* Radar::radar_start_routine(void* arg) {
-	Radar& radar = *(Radar*) arg;
-	interrogate();
-	return NULL;
+void Radar::init() {
+    //pthread_create(&thread_id, NULL,radar_start_routine,(void *) this);
+}
+
+void *Radar::radar_start_routine(void *arg) {
+    Radar &radar = *(Radar *) arg;
+    interrogate();
+    return NULL;
 }
 
 void Radar::interrogate() {
@@ -22,13 +19,9 @@ void Radar::interrogate() {
     std::cout << "ID : " << tmp[0] << std::endl;
     std::cout << "x_coor : " << tmp[1] << std::endl;
     std::cout << "y_coor : " << tmp[2] << std::endl;
-    std::cout << "altitude : " <<tmp[3] << std::endl;
+    std::cout << "altitude : " << tmp[3] << std::endl;
     std::cout << "x_speed : " << tmp[4] << std::endl;
     std::cout << "y_speed : " << tmp[5] << std::endl;
     std::cout << "z_speed : " << tmp[6] << std::endl;
     tmp.clear();
-}
-
-void Radar::print() {
-    display.print_borders(aircrafts, airspace);
 }

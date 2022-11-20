@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include <iostream>
 #include "Client.h"
+#include "Timer.h"
 
 class Aircraft {
 private:
@@ -27,8 +28,10 @@ private:
     my_data_t msg;
     std::vector<int> aircraft_info;
     int time = 0;
+    Timer timer;
+    int res = 0;
 public:
-    Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client);
+    Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client, Timer timer);
 
     ~Aircraft();
 

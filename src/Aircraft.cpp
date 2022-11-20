@@ -6,14 +6,13 @@
  */
 #include "Aircraft.h"
 
-Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client)
+Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client, Timer timer)
         : id(id), x_coor(x_coor),
-          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client) {
+          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), timer(timer) {
 
 	client.init();
 	msg.hdr.type = 0x00;
 	msg.hdr.subtype = id;
-
 //    rc = pthread_attr_init(&attr);
 //    if (!rc) {
 //    }
@@ -26,8 +25,16 @@ Aircraft::~Aircraft() {
 }
 
 void* Aircraft::start_routine(void *arg) {
+	res = timer.start_periodic_timer();
+		if (res < 0) {
+			perror("Start periodic timer");
+		}
+
 	Aircraft& aircraft = *(Aircraft*) arg;
+	while (1) {
+	timer.wait_next_activation();
 	update_position();
+	}
 	return NULL;
 }
 

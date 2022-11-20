@@ -1,8 +1,8 @@
 #include "DataDisplay.h"
 
-DataDisplay::DataDisplay() {
+DataDisplay::DataDisplay(ComputerSystem computer_system) : computer_system(computer_system) {
 
-};
+}
 
 int DataDisplay::scale(int param) {
     return param / 100;

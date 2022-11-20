@@ -9,9 +9,9 @@
 Server::Server(const char *ATTACH_POINT) : ATTACH_POINT(ATTACH_POINT) {}
 
 std::vector<int> Server::run() {
-	  if ((attach = name_attach(NULL, ATTACH_POINT, 0)) == NULL) {
-			std::cout << "no attach point";
-		    }
+    if ((attach = name_attach(NULL, ATTACH_POINT, 0)) == NULL) {
+        std::cout << "no attach point";
+    }
 
     while (1) {
         my_data_t msg;
@@ -45,10 +45,10 @@ std::vector<int> Server::run() {
         }
 
         if (msg.hdr.type == 0x00) {
-        	      if (msg.hdr.subtype == 0x01) {
-                      return msg.data;
-        	      }
-        	   }
+            if (msg.hdr.subtype == 0x01) {
+                return msg.data;
+            }
+        }
 
         MsgReply(rcvid, EOK, 0, 0);
     }
