@@ -1,30 +1,34 @@
-#include <vector>
-#include "DataDisplay.cpp"
+#include "Radar.h"
 
-class Radar {
-private:
-    std::vector <Aircraft> aircrafts;
-    Airspace airspace;
-    DataDisplay display;
-public:
-    Radar(std::vector <Aircraft> aircrafts, Airspace airspace, DataDisplay display) : aircrafts(aircrafts),
-                                                                                      airspace(airspace),
-                                                                                      display(display) {};
+Radar::Radar(std::vector <Aircraft> aircrafts, Airspace airspace, DataDisplay display, Server server) : aircrafts(aircrafts),
+                                                                                         airspace(airspace),
+                                                                                         display(display), server(server) {
 
-    void interrogate() {
-        print();
-        for (auto aircraft: aircrafts) {
-            std::cout << std::to_string(aircraft.get_id()) << std::endl;
-            std::cout
-                    << "Position : " + "(" + std::to_string(aircraft.get_x_coor()) + "," + std::to_string(aircraft.get_y_coor()) + ")"
-                    << std::endl;
-            std::cout << "Altitude : " + std::to_string(aircraft.get_z_coor()) << std::endl;
-            std::cout << "Speed : " + "(" +std::to_string(aircraft.get_x_speed()) + "," +
-                         std::to_string(aircraft.get_y_speed()) + "," + std::to_string(aircraft.get_z_speed()) + ")" << std::endl;
-        }
-    }
-
-    void print() {
-        display.print_borders(aircrafts, airspace);
-    }
 };
+
+void Radar::init() {
+	//pthread_create(&thread_id, NULL,radar_start_routine,(void *) this);
+}
+
+void* Radar::radar_start_routine(void* arg) {
+	Radar& radar = *(Radar*) arg;
+	interrogate();
+	return NULL;
+}
+
+void Radar::interrogate() {
+    //pthread_mutex_lock(&mutex);
+    tmp = server.run();
+    std::cout << "ID : " << tmp[0] << std::endl;
+    std::cout << "x_coor : " << tmp[1] << std::endl;
+    std::cout << "y_coor : " << tmp[2] << std::endl;
+    std::cout << "altitude : " <<tmp[3] << std::endl;
+    std::cout << "x_speed : " << tmp[4] << std::endl;
+    std::cout << "y_speed : " << tmp[5] << std::endl;
+    std::cout << "z_speed : " << tmp[6] << std::endl;
+    tmp.clear();
+}
+
+void Radar::print() {
+    display.print_borders(aircrafts, airspace);
+}
