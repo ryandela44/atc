@@ -7,12 +7,20 @@
 using namespace std;
 
 int main() {
-    std::vector <Aircraft> aircrafts = {{1, 1000, 1000, 1000, 200, 200, 200},
-                                        {2, 2000, 5000, 7000, 200, 200, 200},
-                                        {3, 7000, 7000, 5000, 200, 200, 200}};
+	Client client1("data");
+	Client client2("data");
+	Client client3("data");
+	Server server("data");
+    std::vector <Aircraft> aircrafts = {{0x00, 1000, 1000, 1000, 200, 200, 200,client1},
+                                        {0x01, 2000, 5000, 7000, 200, 200, 200,client2},
+                                        {0x02, 7000, 7000, 5000, 200, 200, 200,client3}};
     Airspace airspace;
     DataDisplay display;
-    Radar radar(aircrafts, airspace, display);
+    Radar radar(aircrafts, airspace, display, server);
     radar.print();
+   /* for (auto aircraft : aircrafts) {
+    aircraft.update_position();
+    radar.interrogate();
+    }*/
     return 0;
 }

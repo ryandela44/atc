@@ -9,12 +9,11 @@
 
 #include <pthread.h>
 #include <iostream>
-
-#include "Server.h"
+#include "Client.h"
 
 class Aircraft {
 private:
-    int id;
+	uint16_t id;
     int x_coor;
     int y_coor;
     int z_coor;
@@ -24,12 +23,18 @@ private:
     int rc;
     pthread_attr_t attr;
     pthread_t pthread;
+    Client client;
+    my_data_t msg;
+    std::vector<int> aircraft_info;
+    int time = 0;
 public:
-    Aircraft(int id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed);
+    Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client);
 
     ~Aircraft();
 
-    int get_id();
+    void * start_routine(void *arg);
+
+    uint16_t get_id();
 
     int get_x_coor();
 
@@ -43,7 +48,9 @@ public:
 
     int get_z_speed();
 
-    void *update_position(void *arg);
+    void update_position();
+
+    void calculate_position();
 
     void update();
 };

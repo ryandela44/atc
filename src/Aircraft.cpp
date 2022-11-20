@@ -6,9 +6,14 @@
  */
 #include "Aircraft.h"
 
-Aircraft::Aircraft(int id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed)
+Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client)
         : id(id), x_coor(x_coor),
-          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed) {
+          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client) {
+
+	client.init();
+	msg.hdr.type = 0x00;
+	msg.hdr.subtype = id;
+
 //    rc = pthread_attr_init(&attr);
 //    if (!rc) {
 //    }
@@ -20,7 +25,14 @@ Aircraft::~Aircraft() {
 //    pthread_exit(NULL);
 }
 
-int Aircraft::get_id() {
+void* Aircraft::start_routine(void *arg) {
+	Aircraft& aircraft = *(Aircraft*) arg;
+	update_position();
+	return NULL;
+}
+
+uint16_t Aircraft::get_id() {
+	msg.hdr.subtype = id;
     return id;
 }
 
@@ -48,8 +60,24 @@ int Aircraft::get_z_speed() {
     return z_speed;
 }
 
-void *Aircraft::update_position(void *arg) {
-    return NULL;
+void Aircraft::update_position() {
+	calculate_position();
+	aircraft_info.push_back(id);
+	aircraft_info.push_back(x_coor);
+	aircraft_info.push_back(y_coor);
+	aircraft_info.push_back(z_coor);
+	aircraft_info.push_back(x_speed);
+	aircraft_info.push_back(y_speed);
+	aircraft_info.push_back(z_speed);
+	msg.data = aircraft_info;
+	client.send(msg);
+	aircraft_info.clear();
+}
+
+void Aircraft::calculate_position() {
+	this->x_coor = x_coor + (time * x_speed);
+	this->y_coor = y_coor + (time * y_speed);
+	this->z_coor = z_coor + (time *	z_speed);
 }
 
 void Aircraft::update() {
