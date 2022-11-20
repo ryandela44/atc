@@ -1,23 +1,9 @@
-#include <filesystem>
-#include <iostream>
-#include <fstream>
-#include <vector>
-
-class Filesystem {
-private:
-    std::fstream file;
-    std::string content;
-    std::string tmp;
-    std::vector<std::string> lines;
-    std::string filename = "console.log";
-
-
-public:
-    Filesystem() {
+#include "Filesystem.h"
+    Filesystem::Filesystem() {
 
     };
 
-    std::vector<std::string> read(std::string filename) {
+    std::vector<std::string> Filesystem::read(std::string filename) {
         file.open(filename)
         if (file.is_open()) {
             file >> content;
@@ -38,8 +24,6 @@ public:
 
     }
 
-    std::string get_file_name() {
+    std::string Filesystem::get_file_name() {
         return filename;
     }
-
-};
