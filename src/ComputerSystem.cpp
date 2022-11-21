@@ -5,18 +5,27 @@ client.init();
 }
 
 void ComputerSystem::compute_violation() {
-for(auto aircraft : radar.getAircrafts()) {
-	if (aircraft.get_x_coor() == x_constraint) {
-	notify_airplane(aircraft.get_id());
-	}
+    auto aircrafts = radar.getAircrafts();
+for(int i = 0; i < aircrafts.size(); i++) {
+    for (int j = 0; j < aircrafts.size(); i++) {
+        if (aircrafts[i] - aircrafts[j] <= x_constraint) {
+            if (aircrafts[i].get_id() != aircrafts[j].get_id()) {
+                notify_airplane(aircraft[i].get_id());
+            }
+        }
 
-	if (aircraft.get_y_coor() == y_constraint) {
-		notify_airplane(aircraft.get_id());
-	}
+        if (aircrafts[i] - aircrafts[j] <= y_constraint) {
+            if (aircrafts[i].get_id() != aircrafts[j].get_id()) {
+                notify_airplane(aircraft[i].get_id());
+            }
+        }
 
-	if (aircraft.get_z_coor() == z_constraint) {
-	notify_airplane(aircraft.get_id());
-	}
+        if (aircrafts[i] - aircrafts[j] <= z_constraint) {
+            if (aircrafts[i].get_id() != aircrafts[j].get_id()) {
+                notify_airplane(aircraft[i].get_id());
+            }
+        }
+    }
 }
 }
 
