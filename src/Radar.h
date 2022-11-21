@@ -9,12 +9,13 @@
 #include <vector>
 #include "Server.h"
 #include <pthread.h>
+#include "Aircraft.h"
 
 class Radar {
 private:
     Server server;
     pthread_t thread_id;
-    std::vector<int> tmp;
+    std::vector<Aircraft> aircrafts;
 public:
     Radar(Server server);
 
@@ -23,6 +24,8 @@ public:
     void init();
 
     void interrogate();
+
+    std::vector<Aircraft> getAircrafts();
 };
 
 

@@ -11,20 +11,25 @@
 using namespace std;
 
 int main() {
+	Client computer("data");
+	Server computer1("data");
     Client client1("data");
     Client client2("data");
     Client client3("data");
     Server server("data");
+    Server server1("data");
+    Server server2("data");
+    Server server3("data");
     Timer timer1(0,4);
     Timer timer2(2,6);
     Timer timer3(7,5);
-    std::vector <Aircraft> aircrafts = {{0x00, 1000, 1000, 1000, 200, 200, 200, client1,timer1},
-                                        {0x01, 2000, 5000, 7000, 200, 200, 200, client2,timer2},
-                                        {0x02, 7000, 7000, 5000, 200, 200, 200, client3,timer3}};
+    std::vector <Aircraft> aircrafts = {{0x00, 1000, 1000, 1000, 200, 200, 200, client1,server1,timer1},
+                                        {0x01, 2000, 5000, 7000, 200, 200, 200, client2,server2,timer2},
+                                        {0x02, 7000, 7000, 5000, 200, 200, 200, client3,server3,timer3}};
     Airspace airspace;
     Radar radar(server);
     OperatorConsole console;
-    ComputerSystem computer_system(radar, console);
+    ComputerSystem computer_system(radar, console, computer, computer1);
     DataDisplay display(computer_system);
     Filesystem filesystem;
     char* filename = "input.txt";

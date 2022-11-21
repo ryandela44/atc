@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include <iostream>
 #include "Client.h"
+#include "Server.h"
 #include "Timer.h"
 
 class Aircraft {
@@ -25,13 +26,13 @@ private:
     pthread_attr_t attr;
     pthread_t pthread;
     Client client;
+    Server server;
     my_data_t msg;
-    std::vector<int> aircraft_info;
     int time = 0;
     Timer timer;
     int res = 0;
 public:
-    Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client, Timer timer);
+    Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server, Timer timer);
 
     ~Aircraft();
 

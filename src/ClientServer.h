@@ -5,10 +5,15 @@
  *      Author: coen320
  */
 #pragma once
-#include <vector>
 typedef struct _pulse msg_header_t;
 
 typedef struct _my_data {
     msg_header_t hdr;
-    std::vector<int> data;
+    uint64_t id;
+    int x_coor;
+    int y_coor;
+    int z_coor;
+    int x_speed;
+    int y_speed;
+    int z_speed;
 } my_data_t;

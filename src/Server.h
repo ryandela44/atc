@@ -20,8 +20,9 @@ private:
     const char *ATTACH_POINT;
     int rcvid = 0;
     name_attach_t *attach;
+    my_data_t msg;
 public:
     Server(const char *ATTACH_POINT);
 
-    std::vector<int> run();
+    my_data_t run();
 };

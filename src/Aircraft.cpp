@@ -6,9 +6,9 @@
  */
 #include "Aircraft.h"
 
-Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client, Timer timer)
+Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server, Timer timer)
         : id(id), x_coor(x_coor),
-          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), timer(timer) {
+          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server), timer(timer) {
 
 	client.init();
 	msg.hdr.type = 0x00;
@@ -69,16 +69,14 @@ int Aircraft::get_z_speed() {
 
 void Aircraft::update_position() {
 	calculate_position();
-	aircraft_info.push_back(id);
-	aircraft_info.push_back(x_coor);
-	aircraft_info.push_back(y_coor);
-	aircraft_info.push_back(z_coor);
-	aircraft_info.push_back(x_speed);
-	aircraft_info.push_back(y_speed);
-	aircraft_info.push_back(z_speed);
-	msg.data = aircraft_info;
+	msg.id = id;
+	msg.x_coor = x_coor;
+	msg.y_coor = y_coor;
+	msg.z_coor = z_coor;
+	msg.x_speed = x_speed;
+	msg.y_speed = y_speed;
+	msg.z_speed = z_speed;
 	client.send(msg);
-	aircraft_info.clear();
 }
 
 void Aircraft::calculate_position() {
