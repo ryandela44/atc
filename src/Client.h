@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
 #include <sys/dispatch.h>
 #include "ClientServer.h"
 

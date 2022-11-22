@@ -12,14 +12,16 @@
 #include "Aircraft.h"
 
 class Radar {
+	friend void * radar_start_routine(void* arg);
 private:
+	int rc = 0;
     Server server;
-    pthread_t thread_id;
     std::vector<Aircraft> aircrafts;
+    my_data_t msg;
 public:
-    Radar(Server server);
+    pthread_t thread_id;
 
-    void *radar_start_routine(void *arg);
+    Radar(Server server);
 
     void init();
 

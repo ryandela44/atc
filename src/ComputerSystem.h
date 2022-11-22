@@ -8,12 +8,10 @@
 #pragma once
 #include "Radar.h"
 #include "OperatorConsole.h"
-#include "Server.h"
-#include "Client.h"
 
 class ComputerSystem {
 public:
-	ComputerSystem(Radar radar, OperatorConsole console, Client client, Server server);
+	ComputerSystem(Radar radar, OperatorConsole console);
 	void compute_violation();
 	void alert();
 	void send_to_display();
@@ -21,8 +19,6 @@ public:
 private:
 	Radar radar;
 	OperatorConsole console;
-	Client client;
-	Server server;
 	my_data_t msg;
 	const int x_constraint = 3000;
 	const int y_constraint = 3000;

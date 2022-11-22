@@ -6,13 +6,14 @@
  */
 #include "Server.h"
 
-Server::Server(const char *ATTACH_POINT) : ATTACH_POINT(ATTACH_POINT) {}
+Server::Server(const char *ATTACH_POINT) : ATTACH_POINT(ATTACH_POINT) {
+	  if ((attach = name_attach(NULL, ATTACH_POINT, 0)) == NULL) {
+	        std::cout << "no attach point";
+	    }
+
+}
 
 my_data_t Server::run() {
-    if ((attach = name_attach(NULL, ATTACH_POINT, 0)) == NULL) {
-        std::cout << "no attach point";
-    }
-
     while (1) {
         rcvid = MsgReceive(attach->chid, &msg, sizeof(msg), NULL);
 

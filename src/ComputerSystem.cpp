@@ -1,11 +1,11 @@
 #include "ComputerSystem.h"
 
-ComputerSystem::ComputerSystem(Radar radar, OperatorConsole console, Client client, Server server) : radar(radar), console(console), client(client), server(server){
-client.init();
+ComputerSystem::ComputerSystem(Radar radar, OperatorConsole console) : radar(radar), console(console){
+
 }
 
 void ComputerSystem::compute_violation() {
-    auto aircrafts = radar.getAircrafts();
+/*    auto aircrafts = radar.getAircrafts();
 for(int i = 0; i < aircrafts.size(); i++) {
     for (int j = 0; j < aircrafts.size(); i++) {
         if (aircrafts[i] - aircrafts[j] <= x_constraint) {
@@ -26,7 +26,7 @@ for(int i = 0; i < aircrafts.size(); i++) {
             }
         }
     }
-}
+}*/
 }
 
 void ComputerSystem::alert() {
@@ -38,7 +38,4 @@ void ComputerSystem::send_to_display() {
 }
 
 void ComputerSystem::notify_airplane(uint64_t id) {
-msg.hdr.type = 0x00;
-msg.hdr.subtype = id;
-client.send(msg);
 }

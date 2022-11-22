@@ -14,6 +14,7 @@
 #include "Timer.h"
 
 class Aircraft {
+	friend void * aircraft_start_routine(void* arg);
 private:
 	uint16_t id;
     int x_coor;
@@ -24,19 +25,22 @@ private:
     int z_speed;
     int rc;
     pthread_attr_t attr;
-    pthread_t pthread;
     Client client;
     Server server;
     my_data_t msg;
     int time = 0;
     Timer timer;
     int res = 0;
+    int cycles = 0;
+    uint64_t start;
+    uint64_t current;
 public:
+    pthread_t thread_id;
+
     Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server, Timer timer);
 
     ~Aircraft();
 
-    void * start_routine(void *arg);
 
     uint16_t get_id();
 

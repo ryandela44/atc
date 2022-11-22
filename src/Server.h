@@ -19,6 +19,7 @@ class Server {
 private:
     const char *ATTACH_POINT;
     int rcvid = 0;
+    int server_coid = 0 ;
     name_attach_t *attach;
     my_data_t msg;
 public:

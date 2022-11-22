@@ -25,12 +25,12 @@ private:
     struct sigevent sigev;
     timer_t timer;
     const int signal = SIGALRM;
-    int res;
+    int res = 0;
     int cycles = 0;
-    uint64_t start;
-    uint64_t current;
-    uint64_t offset;
-	int period;
+    uint64_t start = 0;
+    uint64_t current = 0;
+    uint64_t offset = 0;
+	int period = 0;
 public:
     Timer(uint64_t offset, int period);
 

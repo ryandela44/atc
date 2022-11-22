@@ -10,13 +10,10 @@ Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed,
         : id(id), x_coor(x_coor),
           y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server), timer(timer) {
 
-	client.init();
 	msg.hdr.type = 0x00;
 	msg.hdr.subtype = id;
-//    rc = pthread_attr_init(&attr);
-//    if (!rc) {
-//    }
-//    pthread_attr_setschedpolicy(&attr, SCHED_RR);
+	msg.id = id;
+	update();
 }
 
 Aircraft::~Aircraft() {
@@ -24,17 +21,9 @@ Aircraft::~Aircraft() {
 //    pthread_exit(NULL);
 }
 
-void* Aircraft::start_routine(void *arg) {
-	res = timer.start_periodic_timer();
-		if (res < 0) {
-			perror("Start periodic timer");
-		}
-
+void * aircraft_start_routine(void *arg) {
 	Aircraft& aircraft = *(Aircraft*) arg;
-	while (1) {
-	timer.wait_next_activation();
-	update_position();
-	}
+	aircraft.update_position();
 	return NULL;
 }
 
@@ -68,6 +57,13 @@ int Aircraft::get_z_speed() {
 }
 
 void Aircraft::update_position() {
+	res = timer.start_periodic_timer();
+			if (res < 0) {
+				perror("Start periodic timer");
+			}
+
+	while (1) {
+	timer.wait_next_activation();
 	calculate_position();
 	msg.id = id;
 	msg.x_coor = x_coor;
@@ -76,7 +72,15 @@ void Aircraft::update_position() {
 	msg.x_speed = x_speed;
 	msg.y_speed = y_speed;
 	msg.z_speed = z_speed;
+	std::cout << msg.id;
+	std::cout << msg.x_coor;
+	std::cout << msg.y_coor;
+	std::cout << msg.z_coor;
+	std::cout << msg.x_speed;
+	std::cout << msg.y_speed;
+	std::cout << msg.z_speed;
 	client.send(msg);
+	}
 }
 
 void Aircraft::calculate_position() {
@@ -86,7 +90,11 @@ void Aircraft::calculate_position() {
 }
 
 void Aircraft::update() {
-    //rc = pthread_create(&pthread, &attr, update_position , std::to_string(id));
+	 rc = pthread_attr_init(&attr);
+//	    if (!rc) {
+//	    }
+	    pthread_attr_setschedpolicy(&attr, SCHED_RR);
+    rc = pthread_create(&thread_id, NULL, aircraft_start_routine , (void *) this);
 //    if (!rc) {
 //
 //    }
