@@ -22,7 +22,5 @@ private:
 public:
     Client(const char *ATTACH_POINT);
 
-    int init();
-
     int send(my_data_t msg);
 };

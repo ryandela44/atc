@@ -31,6 +31,7 @@ void Radar::interrogate() {
 void Radar::init() {
 
 	rc = pthread_create(&thread_id, NULL, radar_start_routine , (void *) this);
+	std::cout<< "radar thread running" << std::endl;
 }
 
 std::vector<Aircraft> Radar::getAircrafts() {

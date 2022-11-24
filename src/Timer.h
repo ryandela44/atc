@@ -15,11 +15,11 @@
 #include <stdio.h>
 
 #define ONE_THOUSAND    1000
-#define ONE_MILLION        1000000
+#define ONE_MILLION     1000000
 
 class Timer {
 private:
-    int dummy;
+    int dummy = 0;
     sigset_t sigst;
     struct itimerspec timer_spec;
     struct sigevent sigev;

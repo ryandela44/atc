@@ -10,13 +10,13 @@ Server::Server(const char *ATTACH_POINT) : ATTACH_POINT(ATTACH_POINT) {
 	  if ((attach = name_attach(NULL, ATTACH_POINT, 0)) == NULL) {
 	        std::cout << "no attach point";
 	    }
-
+	  std::cout << "server attached" << std::endl;
 }
 
 my_data_t Server::run() {
     while (1) {
+    	std::cout << "waiting for message" << std::endl;
         rcvid = MsgReceive(attach->chid, &msg, sizeof(msg), NULL);
-
         if (rcvid == -1) {
             break;
         }
@@ -53,9 +53,9 @@ my_data_t Server::run() {
         MsgReply(rcvid, EOK, 0, 0);
     }
 
+    return msg;
     name_detach(attach, 0);
     //return EXIT_SUCCESS;
-    return msg;
 }
 
 

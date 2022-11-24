@@ -6,10 +6,9 @@
  */
 #include "Aircraft.h"
 
-Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server, Timer timer)
+Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server)
         : id(id), x_coor(x_coor),
-          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server), timer(timer) {
-
+          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server) {
 	msg.hdr.type = 0x00;
 	msg.hdr.subtype = id;
 	msg.id = id;
@@ -57,13 +56,8 @@ int Aircraft::get_z_speed() {
 }
 
 void Aircraft::update_position() {
-	res = timer.start_periodic_timer();
-			if (res < 0) {
-				perror("Start periodic timer");
-			}
-
+	std::cout << "started timer" << std::endl;
 	while (1) {
-	timer.wait_next_activation();
 	calculate_position();
 	msg.id = id;
 	msg.x_coor = x_coor;
@@ -81,6 +75,7 @@ void Aircraft::update_position() {
 	std::cout << msg.z_speed;
 	client.send(msg);
 	}
+	std::cout << "out of the loop" << std::endl;
 }
 
 void Aircraft::calculate_position() {
@@ -90,11 +85,12 @@ void Aircraft::calculate_position() {
 }
 
 void Aircraft::update() {
-	 rc = pthread_attr_init(&attr);
+//	 rc = pthread_attr_init(&attr);
 //	    if (!rc) {
 //	    }
-	    pthread_attr_setschedpolicy(&attr, SCHED_RR);
-    rc = pthread_create(&thread_id, NULL, aircraft_start_routine , (void *) this);
+//	    pthread_attr_setschedpolicy(&attr, SCHED_RR);
+    	rc = pthread_create(&thread_id, NULL, aircraft_start_routine , (void *) this);
+    	std::cout<< "plane thread running" << std::endl;
 //    if (!rc) {
 //
 //    }

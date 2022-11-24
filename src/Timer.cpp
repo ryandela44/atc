@@ -50,8 +50,8 @@ void Timer::task_body(void) {
     current = tv.tv_sec * ONE_THOUSAND + tv.tv_nsec / ONE_MILLION;
 
     if (cycles > 0) {
-        fprintf(stderr, "Ave interval between instances: %f milliseconds\n",
-                (double) (current - start) / cycles);
+//        fprintf(stderr, "Ave interval between instances: %f milliseconds\n",
+//                (double) (current - start) / cycles);
     }
 
     cycles++;

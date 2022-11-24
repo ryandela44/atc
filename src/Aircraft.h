@@ -11,7 +11,6 @@
 #include <iostream>
 #include "Client.h"
 #include "Server.h"
-#include "Timer.h"
 
 class Aircraft {
 	friend void * aircraft_start_routine(void* arg);
@@ -29,7 +28,6 @@ private:
     Server server;
     my_data_t msg;
     int time = 0;
-    Timer timer;
     int res = 0;
     int cycles = 0;
     uint64_t start;
@@ -37,7 +35,7 @@ private:
 public:
     pthread_t thread_id;
 
-    Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server, Timer timer);
+    Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server);
 
     ~Aircraft();
 

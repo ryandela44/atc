@@ -6,30 +6,27 @@
 #include "Filesystem.h"
 #include "ComputerSystem.h"
 #include "OperatorConsole.h"
+#include "Timer.h"
 
 
 using namespace std;
 
 int main() {
-	Server server("data");
-    Client client1("data");
-    Client client2("data");
-    Client client3("data");
-    Server server1("plane1");
-    Server server2("plane2");
-    Server server3("plane3");
-    Timer timer1(0,4);
-    Timer timer2(2,6);
-    Timer timer3(7,5);
-    Radar radar(server);
-    std::vector <Aircraft> aircrafts = {{0x00, 1000, 1000, 1000, 200, 200, 200, client1,server1,timer1},
-                                        {0x01, 2000, 5000, 7000, 200, 200, 200, client2,server2,timer2},
-                                        {0x02, 7000, 7000, 5000, 200, 200, 200, client3,server3,timer3}};
+	Radar radar(Server("data"));
+    std::vector <Aircraft> aircrafts = {{0x00, 1000, 1000, 1000, 200, 200, 200, Client("data"),Server ("plane1")},
+                                        {0x01, 2000, 5000, 7000, 200, 200, 200, Client("data"),Server ("plane2")},
+                                        {0x02, 7000, 7000, 5000, 200, 200, 200, Client ("data"),Server("plane3")}};
     Airspace airspace;
     OperatorConsole console;
     ComputerSystem computer_system(radar, console);
     DataDisplay display(computer_system);
     Filesystem filesystem;
+    Timer timer(100000,500000);
+    timer.start_periodic_timer();
+    while (1) {
+    		timer.wait_next_activation(); //wait for timer expiration
+    		timer.task_body(); //executes the task
+    }
 //    pthread_join(radar.thread_id,NULL);
 //    for (auto aicraft : aircrafts) {
 //    	pthread_join(aicraft.thread_id,NULL);
