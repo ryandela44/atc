@@ -32,11 +32,11 @@ private:
     uint64_t offset = 0;
 	int period = 0;
 public:
-    Timer(uint64_t offset, int period);
+    Timer();
 
     void wait_next_activation(void);
 
-    int start_periodic_timer();
+    int start_periodic_timer(uint64_t offset, int period);
 
     void task_body(void);
 

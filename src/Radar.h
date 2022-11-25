@@ -9,14 +9,14 @@
 #include <vector>
 #include "Server.h"
 #include <pthread.h>
-#include "Aircraft.h"
+#include <tuple>
 
 class Radar {
 	friend void * radar_start_routine(void* arg);
 private:
 	int rc = 0;
     Server server;
-    std::vector<Aircraft> aircrafts;
+    std::vector<std::vector<int>> aircrafts;
     my_data_t msg;
 public:
     pthread_t thread_id;
@@ -27,7 +27,7 @@ public:
 
     void interrogate();
 
-    std::vector<Aircraft> getAircrafts();
+    std::vector<std::vector<int>> getAircrafts();
 };
 
 

@@ -8,7 +8,7 @@
 
 Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server)
         : id(id), x_coor(x_coor),
-          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server) {
+          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server){
 	msg.hdr.type = 0x00;
 	msg.hdr.subtype = id;
 	msg.id = id;
@@ -26,62 +26,16 @@ void * aircraft_start_routine(void *arg) {
 	return NULL;
 }
 
-uint16_t Aircraft::get_id() {
-	msg.hdr.subtype = id;
-    return id;
-}
-
-int Aircraft::get_x_coor() {
-    return x_coor;
-}
-
-int Aircraft::get_y_coor() {
-    return y_coor;
-}
-
-int Aircraft::get_z_coor() {
-    return z_coor;
-}
-
-int Aircraft::get_x_speed() {
-    return x_speed;
-}
-
-int Aircraft::get_y_speed() {
-    return y_speed;
-}
-
-int Aircraft::get_z_speed() {
-    return z_speed;
-}
-
 void Aircraft::update_position() {
-	std::cout << "started timer" << std::endl;
-	while (1) {
-	calculate_position();
-	msg.id = id;
-	msg.x_coor = x_coor;
-	msg.y_coor = y_coor;
-	msg.z_coor = z_coor;
-	msg.x_speed = x_speed;
-	msg.y_speed = y_speed;
-	msg.z_speed = z_speed;
-	std::cout << msg.id;
-	std::cout << msg.x_coor;
-	std::cout << msg.y_coor;
-	std::cout << msg.z_coor;
-	std::cout << msg.x_speed;
-	std::cout << msg.y_speed;
-	std::cout << msg.z_speed;
-	client.send(msg);
+	start_periodic_timer(1000000,5000000);
+	while (!exit()) {
+	wait_next_activation();
+	task_body();
 	}
-	std::cout << "out of the loop" << std::endl;
 }
 
 void Aircraft::calculate_position() {
-	this->x_coor = x_coor + (time * x_speed);
-	this->y_coor = y_coor + (time * y_speed);
-	this->z_coor = z_coor + (time *	z_speed);
+
 }
 
 void Aircraft::update() {
@@ -91,8 +45,35 @@ void Aircraft::update() {
 //	    pthread_attr_setschedpolicy(&attr, SCHED_RR);
     	rc = pthread_create(&thread_id, NULL, aircraft_start_routine , (void *) this);
     	std::cout<< "plane thread running" << std::endl;
-//    if (!rc) {
-//
-//    }
-//    pthread_join(pthread, NULL);
+}
+
+void Aircraft::task_body() {
+    struct timespec tv;
+
+    if (start == 0) {
+        clock_gettime(CLOCK_MONOTONIC, &tv);
+        start = tv.tv_sec * ONE_THOUSAND + tv.tv_nsec / ONE_MILLION;
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    current = tv.tv_sec * ONE_THOUSAND + tv.tv_nsec / ONE_MILLION;
+
+    if (cycles > 0) {
+    	fprintf(stderr, "Ave interval between instances: %f milliseconds\n",(double) (current - start) / cycles);
+    	calculate_position();
+    	msg.id = id;
+    	msg.x_coor = x_coor;
+    	msg.y_coor = y_coor;
+    	msg.z_coor = z_coor;
+    	msg.x_speed = x_speed;
+    	msg.y_speed = y_speed;
+    	msg.z_speed = z_speed;
+    	client.send(msg);
+    }
+
+    cycles++;
+}
+
+bool Aircraft::exit() {
+	return airspace.x_space < x_coor || airspace.y_space < y_coor || airspace.z_space < z_coor;
 }

@@ -11,29 +11,18 @@ void * radar_start_routine(void *arg) {
 }
 
 void Radar::interrogate() {
-//	uint64_t id = 0;
-//	int x_coor= 0;
-//	int y_coor= 0;
-//	int z_coor= 0;;
-//	int x_speed = 0;
-//	int y_speed= 0;
-//	int z_speed = 0;
 	msg = server.run();
-	std::cout << msg.id << std::endl;
-	std::cout << msg.x_coor << std::endl;
-	std::cout << msg.y_coor << std::endl;
-	std::cout << msg.z_coor << std::endl;
-	std::cout << msg.x_speed << std::endl;
-	std::cout << msg.y_speed << std::endl;
-	std::cout << msg.z_speed << std::endl;
+	aircrafts.clear();
+	if (msg.hdr.type == 0x00) {
+	aircrafts.push_back({msg.id,msg.x_coor,msg.y_coor,msg.z_coor,msg.x_speed,msg.y_speed,msg.z_speed});
+	}
 }
 
 void Radar::init() {
 
 	rc = pthread_create(&thread_id, NULL, radar_start_routine , (void *) this);
-	std::cout<< "radar thread running" << std::endl;
 }
 
-std::vector<Aircraft> Radar::getAircrafts() {
+std::vector<std::vector<int>> Radar::getAircrafts() {
 	return aircrafts;
 }

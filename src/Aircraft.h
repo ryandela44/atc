@@ -11,8 +11,10 @@
 #include <iostream>
 #include "Client.h"
 #include "Server.h"
+#include "Timer.h"
+#include "Airspace.h"
 
-class Aircraft {
+class Aircraft : public Timer{
 	friend void * aircraft_start_routine(void* arg);
 private:
 	uint16_t id;
@@ -32,6 +34,7 @@ private:
     int cycles = 0;
     uint64_t start;
     uint64_t current;
+    my_airspace airspace;
 public:
     pthread_t thread_id;
 
@@ -39,24 +42,13 @@ public:
 
     ~Aircraft();
 
-
-    uint16_t get_id();
-
-    int get_x_coor();
-
-    int get_y_coor();
-
-    int get_z_coor();
-
-    int get_x_speed();
-
-    int get_y_speed();
-
-    int get_z_speed();
-
     void update_position();
 
     void calculate_position();
 
     void update();
+
+    void task_body(void);
+
+    bool exit();
 };

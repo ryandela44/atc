@@ -16,16 +16,21 @@ int main() {
     std::vector <Aircraft> aircrafts = {{0x00, 1000, 1000, 1000, 200, 200, 200, Client("data"),Server ("plane1")},
                                         {0x01, 2000, 5000, 7000, 200, 200, 200, Client("data"),Server ("plane2")},
                                         {0x02, 7000, 7000, 5000, 200, 200, 200, Client ("data"),Server("plane3")}};
-    Airspace airspace;
     OperatorConsole console;
-    ComputerSystem computer_system(radar, console);
-    DataDisplay display(computer_system);
+    ComputerSystem computer(radar, console);
+    DataDisplay display(computer);
     Filesystem filesystem;
-    Timer timer(100000,500000);
-    timer.start_periodic_timer();
+    //Timer timer;
+    //timer.start_periodic_timer(1000,5000);
     while (1) {
-    		timer.wait_next_activation(); //wait for timer expiration
-    		timer.task_body(); //executes the task
+    		//timer.wait_next_activation(); //wait for timer expiration
+    	    pthread_join(radar.thread_id,NULL);
+    	    for(auto aircraft : aircrafts) {
+    	    pthread_join(aircraft.thread_id,NULL);
+    	    }
+    	    pthread_join(computer.thread_id,NULL);
+    	    pthread_join(display.thread_id,NULL);
+    		//timer.task_body(); //executes the task
     }
 //    pthread_join(radar.thread_id,NULL);
 //    for (auto aicraft : aircrafts) {

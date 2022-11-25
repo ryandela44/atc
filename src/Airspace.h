@@ -7,18 +7,10 @@
 
 #pragma once
 
-class Airspace {
-private:
+typedef struct airspace {
     int x_space = 10000;
     int y_space = 10000;
     int z_space = 25000;
     int sea_level = 15000;
-public:
-    Airspace();
+} my_airspace;
 
-    int get_x_space();
-
-    int get_y_space();
-
-    int get_z_space();
-};

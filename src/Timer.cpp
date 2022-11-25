@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-Timer::Timer(uint64_t offset,  int period ) : offset(offset), period(period) {
+Timer::Timer() {
 
 }
 
@@ -9,7 +9,7 @@ void Timer::wait_next_activation(void) {
     sigwait(&sigst, &dummy);
 }
 
-int Timer::start_periodic_timer() {
+int Timer::start_periodic_timer(uint64_t offset, int period) {
 
     /* set timer parameters */
     timer_spec.it_value.tv_sec = offset / ONE_MILLION;
