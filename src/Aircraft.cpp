@@ -6,9 +6,9 @@
  */
 #include "Aircraft.h"
 
-Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server)
+Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, Client client,Server server, int period_sec,int period_msec)
         : id(id), x_coor(x_coor),
-          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server){
+          y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), client(client), server(server), period_sec(period_sec), period_msec(period_msec){
 	msg.hdr.type = 0x00;
 	msg.hdr.subtype = id;
 	msg.id = id;
@@ -16,8 +16,9 @@ Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed,
 }
 
 Aircraft::~Aircraft() {
-//    pthread_attr_destroy(&attr);
-//    pthread_exit(NULL);
+    //pthread_attr_destroy(&attr);
+    //pthread_exit(NULL);
+	thread_id = NULL;
 }
 
 void * aircraft_start_routine(void *arg) {
@@ -27,10 +28,21 @@ void * aircraft_start_routine(void *arg) {
 }
 
 void Aircraft::update_position() {
-	start_periodic_timer(1000000,5000000);
-	while (!exit()) {
-	wait_next_activation();
-	task_body();
+	//start_periodic_timer(1000000,5000000);
+	cTimer timer(period_sec, period_msec);
+	while (1) {
+	//wait_next_activation();
+		calculate_position();
+	    msg.id = id;
+		msg.x_coor = x_coor;
+		msg.y_coor = y_coor;
+		msg.z_coor = z_coor;
+		msg.x_speed = x_speed;
+		msg.y_speed = y_speed;
+		msg.z_speed = z_speed;
+		client.send(msg);
+		timer.waitTimer();
+	//task_body();
 	}
 }
 
@@ -44,7 +56,6 @@ void Aircraft::update() {
 //	    }
 //	    pthread_attr_setschedpolicy(&attr, SCHED_RR);
     	rc = pthread_create(&thread_id, NULL, aircraft_start_routine , (void *) this);
-    	std::cout<< "plane thread running" << std::endl;
 }
 
 void Aircraft::task_body() {

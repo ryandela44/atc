@@ -14,6 +14,7 @@
 #include <vector>
 #include <tuple>
 #include <pthread.h>
+#include "cTimer.h"
 
 class DataDisplay {
 	friend void * display_start_routine(void* arg);
@@ -23,9 +24,11 @@ private:
     ComputerSystem computer_system;
     std::vector <std::vector<int>> aircrafts;
     my_airspace airspace;
+    int period_sec;
+    int period_msec;
 public:
     pthread_t thread_id;
-    DataDisplay(ComputerSystem computer_system);
+    DataDisplay(ComputerSystem computer_system,int period_sec,int period_msec);
 
     int scale(int param);
 

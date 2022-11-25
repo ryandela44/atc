@@ -10,6 +10,7 @@
 #include "Server.h"
 #include <pthread.h>
 #include <tuple>
+#include "cTimer.h"
 
 class Radar {
 	friend void * radar_start_routine(void* arg);
@@ -18,10 +19,12 @@ private:
     Server server;
     std::vector<std::vector<int>> aircrafts;
     my_data_t msg;
+    int period_sec;
+	int period_msec;
 public:
     pthread_t thread_id;
 
-    Radar(Server server);
+    Radar(Server server,int period_sec,int period_msec);
 
     void init();
 

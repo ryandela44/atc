@@ -1,6 +1,6 @@
 #include "Radar.h"
 
-Radar::Radar(Server server) : server(server) {
+Radar::Radar(Server server, int period_sec,int period_msec) : server(server), period_sec(period_sec), period_msec(period_msec)  {
 	init();
 }
 
@@ -11,10 +11,16 @@ void * radar_start_routine(void *arg) {
 }
 
 void Radar::interrogate() {
+	cTimer timer(period_sec,period_msec);
+	while (1) {
 	msg = server.run();
 	aircrafts.clear();
 	if (msg.hdr.type == 0x00) {
 	aircrafts.push_back({msg.id,msg.x_coor,msg.y_coor,msg.z_coor,msg.x_speed,msg.y_speed,msg.z_speed});
+	std::cout << std::to_string(msg.id) << std::endl;
+	}
+	std::cout << "went through" << std::endl;
+	timer.waitTimer();
 	}
 }
 

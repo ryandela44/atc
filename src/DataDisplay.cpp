@@ -1,6 +1,6 @@
 #include "DataDisplay.h"
 
-DataDisplay::DataDisplay(ComputerSystem computer_system) : computer_system(computer_system) {
+DataDisplay::DataDisplay(ComputerSystem computer_system, int period_sec, int period_msec) : computer_system(computer_system), period_sec(period_sec),period_msec(period_msec) {
 init();
 }
 
@@ -15,6 +15,8 @@ int DataDisplay::scale(int param) {
 }
 
 void DataDisplay::print() {
+	cTimer timer(period_sec,period_msec);
+	while (1) {
 	aircrafts = computer_system.send_to_display();
     x = scale(airspace.x_space);
     y = scale(airspace.y_space);
@@ -22,9 +24,9 @@ void DataDisplay::print() {
     for (int i = 0; i < x; i++) {
         for (int j = 0; j < y; j++) {
             if ((i == 0 && j != y - 1) || (i == x - 1 && j != y - 1) || j == 0) {
-                std::cout << " * ";
+                std::cout << "*";
             } else if (j == y - 1) {
-                std::cout << " * " << std::endl;
+                std::cout << "*" << std::endl;
             } else if (aircrafts.empty()) {
                 std::cout << " ";
             } else {
@@ -42,6 +44,8 @@ void DataDisplay::print() {
             }
         }
     }
+    timer.waitTimer();
+	}
 }
 
 void DataDisplay::init() {

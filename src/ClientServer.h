@@ -16,4 +16,5 @@ typedef struct _my_data {
     int x_speed;
     int y_speed;
     int z_speed;
+    int cmd;
 } my_data_t;

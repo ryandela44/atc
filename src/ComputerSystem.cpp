@@ -1,6 +1,6 @@
 #include "ComputerSystem.h"
 
-ComputerSystem::ComputerSystem(Radar radar, OperatorConsole console) : radar(radar), console(console){
+ComputerSystem::ComputerSystem(Radar radar, OperatorConsole console, int period_sec,int period_msec) : radar(radar), console(console), period_sec( period_sec), period_msec(period_msec) {
 init();
 }
 
@@ -11,6 +11,8 @@ void * computer_start_routine(void *arg) {
 }
 
 void ComputerSystem::compute_violation() {
+	cTimer timer(period_sec,period_msec);
+	while (1) {
 	send_to_display();
 /*    auto aircrafts = radar.getAircrafts();
 for(int i = 0; i < aircrafts.size(); i++) {
@@ -34,6 +36,8 @@ for(int i = 0; i < aircrafts.size(); i++) {
         }
     }
 }*/
+	timer.waitTimer();
+	}
 }
 
 void ComputerSystem::alert() {
@@ -49,5 +53,9 @@ void ComputerSystem::notify_airplane(uint64_t id) {
 
 void ComputerSystem::init() {
 	pthread_create(&thread_id, NULL, computer_start_routine , (void *) this);
+}
+
+std::tuple<uint16_t, int> ComputerSystem::send_command() {
+	return std::make_tuple(id, command);
 }
 
