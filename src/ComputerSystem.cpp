@@ -48,7 +48,12 @@ std::vector <std::vector<int>> ComputerSystem::send_to_display() {
 return radar.getAircrafts();
 }
 
+std::vector <int> ComputerSystem::more_display() {
+return console.request();
+}
+
 void ComputerSystem::notify_airplane(uint64_t id) {
+
 }
 
 void ComputerSystem::init() {

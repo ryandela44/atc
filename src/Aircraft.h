@@ -30,6 +30,7 @@ private:
     Client client;
     Server server;
     my_data_t msg;
+    my_data_t rcv_data;
     int time = 0;
     int res = 0;
     int cycles = 0;
@@ -52,6 +53,8 @@ public:
     void update();
 
     void task_body(void);
+
+    void rcv_cmd();
 
     bool exit();
 };

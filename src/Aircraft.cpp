@@ -88,3 +88,16 @@ void Aircraft::task_body() {
 bool Aircraft::exit() {
 	return airspace.x_space < x_coor || airspace.y_space < y_coor || airspace.z_space < z_coor;
 }
+
+void Aircraft::rcv_cmd() {
+	rcv_data = server.run();
+
+	if (rcv_data.hd.type == 0x01) {
+	// something
+	}
+
+	if (rcv_data.hdr.type == 0x02) {
+	//algorithm
+	}
+
+}

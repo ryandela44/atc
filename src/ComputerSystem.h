@@ -20,6 +20,7 @@ public:
 	void compute_violation();
 	void alert();
 	std::vector <std::vector<int>> send_to_display();
+	std::vector <int> more_display();
 	void notify_airplane(uint64_t id);
 	void init();
 	std::tuple<uint16_t, int> send_command();
