@@ -42,10 +42,8 @@ my_data_t Server::run() {
             continue;
         }
 
-        if (msg.hdr.type == 0x00) {
         	MsgReply(rcvid, EOK, 0, sizeof(msg));
             return msg;
-        }
     }
 
     name_detach(attach, 0);

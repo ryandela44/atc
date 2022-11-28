@@ -6,32 +6,32 @@
  */
 
 #pragma once
-#include "Radar.h"
-#include "OperatorConsole.h"
 #include <pthread.h>
 #include <tuple>
 #include "cTimer.h"
+#include "Client.h"
+#include "Server.h"
+#include <vector>
 
 class ComputerSystem {
 	friend void * computer_start_routine(void* arg);
 public:
 	pthread_t thread_id;
-	ComputerSystem(Radar radar, OperatorConsole console, int period_sec,int period_msec);
+	ComputerSystem(int period_sec,int period_msec);
 	void compute_violation();
-	void alert();
-	std::vector <std::vector<int>> send_to_display();
-	std::vector <int> more_display();
-	void notify_airplane(uint64_t id);
 	void init();
-	std::tuple<uint16_t, int> send_command();
+	std::tuple<int, int> send_command();
+	void send_data();
+private:
 	int period_sec;
 	int period_msec;
 	int command = 0;
-	uint16_t id = 0;
-private:
-	Radar radar;
-	OperatorConsole console;
+	int id = 0;
 	my_data_t msg;
+	my_data_t rcv_data;
+	std::vector<std::vector<int>> aircrafts;
+	Client display;
+	Client console;
 	const int x_constraint = 3000;
 	const int y_constraint = 3000;
 	const int z_constraint = 1000;

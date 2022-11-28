@@ -1,6 +1,6 @@
 #include "DataDisplay.h"
 
-DataDisplay::DataDisplay(ComputerSystem computer_system, int period_sec, int period_msec) : computer_system(computer_system), period_sec(period_sec),period_msec(period_msec) {
+DataDisplay::DataDisplay( int period_sec, int period_msec) : period_sec(period_sec),period_msec(period_msec) {
 init();
 }
 
@@ -16,9 +16,14 @@ int DataDisplay::scale(int param) {
 
 void DataDisplay::print() {
 	cTimer timer(period_sec,period_msec);
+	Server server("display");
 	while (1) {
-	aircrafts = computer_system.send_to_display();
-	info = computer_system.more_display();
+		rcv_data = server.run();
+		aircrafts.clear();
+		if (rcv_data.hdr.type == 0x02) {
+			aircrafts.push_back({rcv_data.id,rcv_data.x_coor,rcv_data.y_coor,rcv_data.z_coor,rcv_data.x_speed,rcv_data.y_speed,rcv_data.z_speed});
+		}
+	//info = computer_system.more_display();
     x = scale(airspace.x_space);
     y = scale(airspace.y_space);
 
@@ -46,7 +51,7 @@ void DataDisplay::print() {
         }
     }
 
-    for (int i = 0; i < aircrafts.size(); i++) {
+    /*for (int i = 0; i < aircrafts.size(); i++) {
     	for (int j =0; j < info.size(); j++) {
     		int x_coor = aircrafts[i][1];
     		int y_coor = aircrafts[i][2];
@@ -58,7 +63,7 @@ void DataDisplay::print() {
     			std::cout << x_coor << y_coor << z_coor << x_speed << y_speed << z_speed << std::endl;
     		}
     	}
-    }
+    }*/
     timer.waitTimer();
 	}
 }

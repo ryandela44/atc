@@ -16,9 +16,9 @@ int main() {
     std::vector <Aircraft> aircrafts = {{0x00, 1000, 1000, 1000, 200, 200, 200,1,0},
                                         {0x01, 2000, 5000, 7000, 200, 200, 200,1,0},
                                         {0x02, 7000, 7000, 5000, 200, 200, 200,1,0}};
-    OperatorConsole console(4,0);
-    ComputerSystem computer(radar, console,3,0);
-    DataDisplay display(computer,5,0);
+    OperatorConsole console(2,0);
+    ComputerSystem computer(2,0);
+    DataDisplay display(5,0);
     Filesystem filesystem;
     //Timer timer;
     //timer.start_periodic_timer(1000,5000);

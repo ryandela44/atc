@@ -9,27 +9,27 @@
 
 #include "Aircraft.h"
 #include "Airspace.h"
-#include "ComputerSystem.h"
 #include <iostream>
 #include <vector>
 #include <tuple>
 #include <pthread.h>
 #include "cTimer.h"
+#include "Server.h"
 
 class DataDisplay {
 	friend void * display_start_routine(void* arg);
 private:
     int x, y;
     std::vector <std::tuple<int, int>> positions;
-    ComputerSystem computer_system;
     std::vector <std::vector<int>> aircrafts;
     my_airspace airspace;
     int period_sec;
     int period_msec;
-    std::vector<int> info;
+    //std::vector<int> info;
+    my_data_t rcv_data;
 public:
     pthread_t thread_id;
-    DataDisplay(ComputerSystem computer_system,int period_sec,int period_msec);
+    DataDisplay(int period_sec,int period_msec);
 
     int scale(int param);
 
