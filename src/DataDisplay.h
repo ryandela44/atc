@@ -26,7 +26,7 @@ private:
     my_airspace airspace;
     int period_sec;
     int period_msec;
-    std::vector<std::vector<int>> info;
+    std::vector<int> info;
 public:
     pthread_t thread_id;
     DataDisplay(ComputerSystem computer_system,int period_sec,int period_msec);

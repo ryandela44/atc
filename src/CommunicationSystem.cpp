@@ -1,6 +1,6 @@
 #include "CommunicationSystem.h"
 
-CommunicationSystem::CommunicationSystem(ComputerSystem computer,  Client client) : computer(computer), client(client) {
+CommunicationSystem::CommunicationSystem(ComputerSystem computer) : computer(computer) {
 init();
 }
 
@@ -15,10 +15,11 @@ void CommunicationSystem::init() {
 }
 
 void CommunicationSystem::send() {
+	Client client;
 	id = std::get<0>(computer.send_command());
 	command = std::get<1>(computer.send_command());
 	msg.hdr.type = 0x01;
 	msg.id = id;
 	msg.cmd = command;
-	client.send(msg);
+	client.send(std::to_string(msg.id).c_str(),msg);
 }

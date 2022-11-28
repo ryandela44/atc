@@ -16,7 +16,6 @@ class Radar {
 	friend void * radar_start_routine(void* arg);
 private:
 	int rc = 0;
-    Server server;
     std::vector<std::vector<int>> aircrafts;
     my_data_t msg;
     int period_sec;
@@ -24,7 +23,7 @@ private:
 public:
     pthread_t thread_id;
 
-    Radar(Server server,int period_sec,int period_msec);
+    Radar(int period_sec,int period_msec);
 
     void init();
 

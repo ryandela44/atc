@@ -15,13 +15,12 @@ class CommunicationSystem {
 	friend void * com_start_routine(void* arg);
 private:
 	ComputerSystem computer;
-	Client client;
 	my_data_t msg;
 	uint16_t id;
 	int command;
 public:
 	pthread_t thread_id;
-	CommunicationSystem(ComputerSystem computer, Client client);
+	CommunicationSystem(ComputerSystem computer);
 	void init();
 	void send();
 };

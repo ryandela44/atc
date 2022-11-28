@@ -1,6 +1,6 @@
 #include "Radar.h"
 
-Radar::Radar(Server server, int period_sec,int period_msec) : server(server), period_sec(period_sec), period_msec(period_msec)  {
+Radar::Radar(int period_sec,int period_msec) : period_sec(period_sec), period_msec(period_msec)  {
 	init();
 }
 
@@ -12,6 +12,7 @@ void * radar_start_routine(void *arg) {
 
 void Radar::interrogate() {
 	cTimer timer(period_sec,period_msec);
+	Server server("radar");
 	while (1) {
 	msg = server.run();
 	aircrafts.clear();

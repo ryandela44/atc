@@ -17,10 +17,9 @@
 
 class Client {
 private:
-    const char *ATTACH_POINT;
     int server_coid;
 public:
-    Client(const char *ATTACH_POINT);
+    Client();
 
-    int send(my_data_t msg);
+    int send(const char *ATTACH_POINT,my_data_t msg);
 };

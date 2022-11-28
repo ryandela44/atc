@@ -18,8 +18,9 @@ private:
 	 int period_sec;
 	 int period_msec;
 	 my_data_t msg;
-	 Client client;
+	 std::vector<int> info;
 public:
+	pthread_t thread_id;
 	OperatorConsole(int period_sec, int period_msec);
 	void init();
 	void send(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed);
