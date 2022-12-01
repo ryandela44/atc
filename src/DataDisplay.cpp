@@ -16,12 +16,17 @@ int DataDisplay::scale(int param) {
 
 void DataDisplay::print() {
 	Server server("display");
-	std::vector<int> check;
 	cTimer timer(5,0);
 	while (1) {
 		//std::cout<< "on top" << std::endl;
 		rcv = server.run();
-		//std::cout<< "data : " << rcv.id << std::endl;
+		std::cout<< "id : " << rcv.id << std::endl;
+		std::cout<< "x_coor : " << rcv.x_coor << std::endl;
+		std::cout<< "y_coor : " << rcv.y_coor << std::endl;
+		std::cout<< "z_coor : " << rcv.z_coor << std::endl;
+		std::cout<< "x_speed : " << rcv.x_speed << std::endl;
+		std::cout<< "y_speed : " << rcv.y_speed << std::endl;
+		std::cout<< "z_speed : " << rcv.z_speed << std::endl;
 		if (rcv.hdr.type == 0x02) {
 			aircrafts.push_back(rcv);
 			print_aircrafts();

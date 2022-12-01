@@ -13,6 +13,7 @@
 
 class Filesystem {
 private:
+	FILE *fp;
 	char buffer [1024];
 	int fd = 0;
 	int size_read = 0;

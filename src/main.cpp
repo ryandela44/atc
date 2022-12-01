@@ -6,31 +6,38 @@
 #include "Filesystem.h"
 #include "ComputerSystem.h"
 #include "OperatorConsole.h"
+#include "CommunicationSystem.h"
 #include "Timer.h"
 
 
 using namespace std;
 
 int main() {
+	cTimer timer(1, 0);
 	Radar radar(1,0);
-    std::vector <Aircraft> aircrafts = {{0x00, 500, 1000, 1000, 200, 200, 200,1,000},
+    std::vector <Aircraft> aircrafts = {{0x00, 500, 500, 1000, 200, 200, 200,1,000},
                                         {0x01, 2000, 5000, 7000, 200, 200, 200,1,000},
                                         {0x02, 7000, 7000, 5000, 200, 200, 200,1,000}};
     OperatorConsole console(2,0);
     ComputerSystem computer(1,0);
     DataDisplay display(1,0);
-    //Filesystem filesystem;
+    //CommunicationSystem com(1,0);
+    Filesystem filesystem;
     		for(auto aircraft : aircrafts) {
     	    pthread_join(aircraft.thread_id,NULL);
     	    }
     	    pthread_join(radar.thread_id,NULL);
     	    pthread_join(computer.thread_id,NULL);
     	    pthread_join(display.thread_id,NULL);
-    	    //pthread_join(console.thread_id,NULL);
+    	    pthread_join(console.thread_id,NULL);
 
 //    char* filename = "input.txt";
-//    char* buffer = filesystem.read_file(filename);
-//    char content[] = {"id = 0, x_speed = 20"};
+//    char content[] = {"time = 0, id = 0, x_coor = 500, y_coor = 500, z_coor = 1000 , x_speed = 200, y_speed=200 , z_speed = 200, "};
 //    filesystem.write_file("input.txt", content);
+//    char* buffer = filesystem.read_file(filename);
+//    while(1) {
+//    	std::cout << "in timer " << std::endl;
+//    	timer.waitTimer();
+//    }
     return 0;
 }

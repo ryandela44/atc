@@ -24,19 +24,22 @@
     }
 
     void Filesystem::write_file(char* filename, char* content) {
-    	fd = creat( filename, S_IRUSR | S_IWUSR );
-
-    	    /* write the text              */
-    	    size_written = write( fd, content,
-    	              sizeof( content ) );
-
-    	    /* test for error              */
-    	    if( size_written != sizeof( content ) ) {
-    	        perror( "Error writing" );
-    	    }
-
-    	    printf("wrote in file");
-
-    	    /* close the file              */
-    	    close( fd );
+//    	fd = creat( filename, S_IRUSR | S_IWUSR );
+//
+//    	    /* write the text              */
+//    	    size_written = write( fd, content,
+//    	              sizeof( content ) );
+//
+//    	    /* test for error              */
+//    	    if( size_written != sizeof( content ) ) {
+//    	        perror( "Error writing" );
+//    	    }
+//
+//    	    printf("wrote in file");
+//
+//    	    /* close the file              */
+//    	    close( fd );
+    	fp = fopen(filename,"w");
+    	fprintf(fp,"%s",content);
+    	fclose(fp);
     }
