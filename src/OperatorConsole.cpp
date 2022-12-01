@@ -1,5 +1,5 @@
 #include "OperatorConsole.h"
-
+std::string in;
 OperatorConsole::OperatorConsole(int period_sec, int period_msec) :  period_sec(period_sec), period_msec(period_msec) {
 	init();
 }
@@ -9,25 +9,54 @@ void * console_start_routine(void *arg) {
 	return NULL;
 }
 
+void * input_console_start_routine(void* arg) {
+	std::string s;
+	std::cin >> s;
+	in = s;
+	return NULL;
+}
+
+void * rcv_console_start_routine(void* arg) {
+	Server server("console");
+	Client client;
+	my_data_t rcv_data = server.run();
+
+	if ( rcv_data.hdr.type == 0x02) {
+		if (in.find( "speed") != in.npos) {
+			rcv_data.cmd = "speed";
+		}
+		if (in.find("altitude") != in.npos) {
+			rcv_data.cmd = "altitude";
+		}
+		if (in.find("position")!= in.npos) {
+			rcv_data.cmd = "position";
+		}
+		rcv_data.hdr.type = 0x04;
+		client.send("computer",rcv_data);
+	}
+	return NULL;
+}
+
 void OperatorConsole::init(){
 	pthread_create(&thread_id, NULL, console_start_routine , (void *) this);
 }
 
-void OperatorConsole::send(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed) {
+void OperatorConsole::send() {
+	cTimer timer(period_sec,period_msec);
 	Client client;
-	msg.hdr.type = 0x02;
-	msg.id = id;
-	msg.x_coor = x_coor;
-	msg.y_coor = y_coor;
-	msg.z_coor = z_coor;
-	msg.x_speed = x_speed;
-	msg.y_speed = y_speed;
-	msg.z_speed = z_speed;
-	client.send(std::to_string(msg.id).c_str(),msg);
+	pthread_create(&thread_input_console_id,NULL,input_console_start_routine,NULL);
+	pthread_create(&thread_rcv_console_id,NULL,rcv_console_start_routine,NULL);
+	pthread_join(thread_input_console_id,NULL);
+	pthread_join(thread_rcv_console_id,NULL);
+
+	if (in.find("display") != in.npos) {
+	msg.hdr.type = 0x04;
+	msg.cmd = "display";
+	client.send("computer", msg);
+	}
+	timer.waitTimer();
 }
 
-std::vector<int> OperatorConsole::request() {
-return info;
-}
+
 
 

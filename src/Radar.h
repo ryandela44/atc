@@ -17,12 +17,10 @@ class Radar {
 	friend void * radar_start_routine(void* arg);
 private:
 	int rc = 0;
-    std::vector<std::vector<int>> aircrafts;
-    my_data_t msg;
-    my_data_t rcv_data;
     int period_sec;
 	int period_msec;
 	Client client;
+	my_data_t msg;
 public:
     pthread_t thread_id;
 
@@ -31,8 +29,6 @@ public:
     void init();
 
     void interrogate();
-
-    std::vector<std::vector<int>> getAircrafts();
 
     void send_data();
 };

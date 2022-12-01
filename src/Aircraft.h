@@ -28,11 +28,13 @@ private:
     int rc;
     pthread_attr_t attr;
     my_data_t msg;
-    my_data_t rcv_data;
+    my_data_t rcv;
     int res = 0;
     my_airspace airspace;
     int period_sec;
     int period_msec;
+    bool flag = true;
+    Client client;
 public:
     pthread_t thread_id;
 
@@ -44,7 +46,9 @@ public:
 
     void calculate_position();
 
-    void update();
+    void init();
+
+    void send_to_radar();
 
     void rcv_cmd();
 

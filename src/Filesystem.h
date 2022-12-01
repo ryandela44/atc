@@ -13,7 +13,7 @@
 
 class Filesystem {
 private:
-	char buffer [80];
+	char buffer [1024];
 	int fd = 0;
 	int size_read = 0;
 	int size_written = 0;

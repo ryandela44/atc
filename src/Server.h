@@ -17,13 +17,13 @@
 
 class Server {
 private:
-    const char *ATTACH_POINT;
-    int rcvid = 0;
-    int server_coid = 0 ;
-    name_attach_t *attach;
-    my_data_t msg;
+	const char *ATTACH_POINT;
+	int rcvid = 0;
+	int server_coid = 0 ;
+	name_attach_t *attach;
+	my_data_t msg;
 public:
-    Server(const char *ATTACH_POINT);
+	Server(const char *ATTACH_POINT);
 
-    my_data_t run();
+	my_data_t run();
 };

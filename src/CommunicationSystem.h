@@ -6,21 +6,21 @@
  */
 
 #pragma once
-#include "ComputerSystem.h"
 #include "Client.h"
 #include "ClientServer.h"
+#include "Server.h"
 #include <pthread.h>
 
 class CommunicationSystem {
 	friend void * com_start_routine(void* arg);
 private:
-	ComputerSystem computer;
-	my_data_t msg;
-	uint16_t id;
+	int id;
 	int command;
+	 my_data_t msg;
+	 my_data_t rcv_data;
 public:
 	pthread_t thread_id;
-	CommunicationSystem(ComputerSystem computer);
+	CommunicationSystem();
 	void init();
 	void send();
 };

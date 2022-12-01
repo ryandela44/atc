@@ -1,61 +1,59 @@
 #include "ComputerSystem.h"
-
 ComputerSystem::ComputerSystem(int period_sec,int period_msec) : period_sec( period_sec), period_msec(period_msec) {
-init();
+	init();
 }
 
 void * computer_start_routine(void *arg) {
 	ComputerSystem& computer = *(ComputerSystem*) arg;
-	computer.compute_violation();
+	computer.compute();
 	return NULL;
 }
 
-void ComputerSystem::compute_violation() {
-	cTimer timer(period_sec,period_msec);
+void ComputerSystem::compute() {
+	//cTimer timer(period_sec, period_msec);
 	Server server("computer");
 	while (1) {
-		rcv_data = server.run();
-		aircrafts.clear();
-		if (rcv_data.hdr.type == 0x01) {
-			aircrafts.push_back({rcv_data.id,rcv_data.x_coor,rcv_data.y_coor,rcv_data.z_coor,rcv_data.x_speed,rcv_data.y_speed,rcv_data.z_speed});
+		rcv = server.run();
+		if (rcv.hdr.type == 0x01) {
+			//std::cout << "computer :  " << rcv.id << std::endl;
+			rcv.hdr.type = 0x02;
+			display.send("display", rcv);
 		}
-			send_data();
-/*    auto aircrafts = radar.getAircrafts();
-for(int i = 0; i < aircrafts.size(); i++) {
-    for (int j = 0; j < aircrafts.size(); i++) {
-        if (aircrafts[i] - aircrafts[j] <= x_constraint) {
-            if (aircrafts[i].get_id() != aircrafts[j].get_id()) {
-                notify_airplane(aircraft[i].get_id());
-            }
-        }
-
-        if (aircrafts[i] - aircrafts[j] <= y_constraint) {
-            if (aircrafts[i].get_id() != aircrafts[j].get_id()) {
-                notify_airplane(aircraft[i].get_id());
-            }
-        }
-
-        if (aircrafts[i] - aircrafts[j] <= z_constraint) {
-            if (aircrafts[i].get_id() != aircrafts[j].get_id()) {
-                notify_airplane(aircraft[i].get_id());
-            }
-        }
-    }
-}*/
-	timer.waitTimer();
+		if (rcv.hdr.type == 0x04) {
+			analyze(rcv);
+		}
+		compute_violation();
+		//timer.waitTimer();
 	}
+
 }
-void ComputerSystem::send_data() {
-	for (auto aircraft : aircrafts) {
-		msg.hdr.type = 0x02;
-		msg.id = aircraft[0];
-		msg.x_coor = aircraft[1];
-		msg.y_coor = aircraft[2];
-		msg.z_coor = aircraft[3];
-		msg.x_speed = aircraft[4];
-		msg.y_speed = aircraft[5];
-		msg.z_speed = aircraft[6];
-		display.send("display",msg);
+
+void ComputerSystem::compute_violation() {
+	if(!aircrafts.empty() || aircrafts.size() < 2) {
+		for(int i = 0; i < this->aircrafts.size(); i++) {
+			for (int j = 1; j < this->aircrafts.size(); i++) {
+				if ((aircrafts[i].x_coor - aircrafts[j].x_coor <= x_constraint) || (aircrafts[i].x_coor + (180 * aircrafts[i].x_speed) == aircrafts[j].x_coor + (180*aircrafts[j].x_speed) )) {
+					if (aircrafts[i].id != aircrafts[j].id) {
+						flag_x = true;
+						notify(aircrafts[i]);
+					}
+				}
+
+				if ((aircrafts[i].y_coor - aircrafts[j].y_coor <= y_constraint) || (aircrafts[i].y_coor + (180 * aircrafts[i].y_speed) == aircrafts[j].y_coor + (180*aircrafts[j].y_speed) )) {
+					if (aircrafts[i].id != aircrafts[j].id) {
+						flag_y = true;
+						notify(aircrafts[i]);
+					}
+				}
+
+				if ((aircrafts[i].z_coor - aircrafts[j].z_coor <= z_constraint) || (aircrafts[i].z_coor + (180 * aircrafts[i].z_speed) == aircrafts[j].z_coor + (180*aircrafts[j].z_speed) )) {
+					if (aircrafts[i].id != aircrafts[j].id) {
+						flag_z = true;
+						notify(aircrafts[i]);
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -63,6 +61,38 @@ void ComputerSystem::init() {
 	pthread_create(&thread_id, NULL, computer_start_routine , (void *) this);
 }
 
-std::tuple<int, int> ComputerSystem::send_command() {
-	return std::make_tuple(id, command);
+void ComputerSystem::notify(my_data_t aircraft) {
+	aircraft.hdr.type = 0x02;
+	console.send("operator",aircraft);
+}
+
+void ComputerSystem::analyze(my_data_t aircraft) {
+	Client client;
+	for (int i = 0; i < aircrafts.size(); i ++) {
+		aircraft.hdr.type = 0x02;
+		std::string in = aircraft.cmd;
+		if (in == "speed") {
+			if (flag_x) {
+				aircraft.x_speed = (aircraft.x_speed)/2;
+			}
+			if (flag_y) {
+				aircraft.y_speed = (aircraft.y_speed)/2;
+			}
+			if (flag_z) {
+				aircraft.z_speed = (aircraft.z_speed)/2;
+			}
+			client.send("com", aircraft);
+		}
+		if ( in == "altitude") {
+			aircraft.cmd = "altitude";
+		}
+		if (in == "position") {
+			aircraft.cmd = "position";
+		}
+		if (in == "display") {
+			aircraft.hdr.subtype = 0x01;
+			aircraft.cmd = "display";
+			client.send("display", aircraft);
+		}
+	}
 }

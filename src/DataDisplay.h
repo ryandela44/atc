@@ -18,15 +18,16 @@
 
 class DataDisplay {
 	friend void * display_start_routine(void* arg);
+	friend void * display_server_start_routine(void* arg);
 private:
     int x, y;
     std::vector <std::tuple<int, int>> positions;
-    std::vector <std::vector<int>> aircrafts;
+    std::vector <my_data_t> aircrafts;
     my_airspace airspace;
     int period_sec;
     int period_msec;
-    //std::vector<int> info;
-    my_data_t rcv_data;
+    my_data_t rcv;
+    pthread_mutex_t mutex;
 public:
     pthread_t thread_id;
     DataDisplay(int period_sec,int period_msec);
@@ -34,6 +35,8 @@ public:
     int scale(int param);
 
     void print();
+
+    void print_aircrafts();
 
     void init();
 };
