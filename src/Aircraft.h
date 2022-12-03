@@ -46,6 +46,12 @@ public:
 
     void calculate_position();
 
+    void change_speed(int x_new_speed, int y_new_speed);
+
+    void change_altitude(int z_new_coor);
+
+    void change_position(int x_new_coor, int y_new_coor);
+
     void init();
 
     void send_to_radar();

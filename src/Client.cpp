@@ -20,4 +20,3 @@ int Client::send(const char *ATTACH_POINT, my_data_t msg) {
 }
 
 
-

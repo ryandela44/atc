@@ -10,55 +10,75 @@ void * computer_start_routine(void *arg) {
 }
 
 void ComputerSystem::compute() {
-	//cTimer timer(period_sec, period_msec);
 	Server server("computer");
+	//cTimer timer(period_sec, period_msec);
+	//Client client;
+
 	while (1) {
-		rcv = server.run();
+		rcv= server.run();
+		//std::cout<< "id : " << rcv.id << std::endl;
 		if (rcv.hdr.type == 0x01) {
-			//std::cout << "computer :  " << rcv.id << std::endl;
 			rcv.hdr.type = 0x02;
-			display.send("display", rcv);
+			aircrafts.push_back(rcv);
 		}
+
 		if (rcv.hdr.type == 0x04) {
+			std::cout << "computer received data :  " << rcv.cmd << std::endl;
 			analyze(rcv);
+		}
+		//std::cout<< "size : " << aircrafts.size() << std::endl;
+		if (aircrafts.size() == 3) {
+			send();
+			aircrafts.clear();
 		}
 		compute_violation();
 		//timer.waitTimer();
+		//aircrafts.clear();
 	}
-
 }
 
 void ComputerSystem::compute_violation() {
-	if(!aircrafts.empty() || aircrafts.size() < 2) {
+	/*	if(!aircrafts.empty() || aircrafts.size() < 2) {
 		for(int i = 0; i < this->aircrafts.size(); i++) {
 			for (int j = 1; j < this->aircrafts.size(); i++) {
-				if ((aircrafts[i].x_coor - aircrafts[j].x_coor <= x_constraint) || (aircrafts[i].x_coor + (180 * aircrafts[i].x_speed) == aircrafts[j].x_coor + (180*aircrafts[j].x_speed) )) {
-					if (aircrafts[i].id != aircrafts[j].id) {
+				if ((aircrafts[i][1] - aircrafts[j][1] <= x_constraint) || (aircrafts[i][1] + (180 * aircrafts[i][4]) == aircrafts[j][1] + (180 * aircrafts[j][4]) )) {
+					if (aircrafts[i][0] != aircrafts[j][0]) {
 						flag_x = true;
-						notify(aircrafts[i]);
+						//notify(aircrafts[i]);
 					}
 				}
 
-				if ((aircrafts[i].y_coor - aircrafts[j].y_coor <= y_constraint) || (aircrafts[i].y_coor + (180 * aircrafts[i].y_speed) == aircrafts[j].y_coor + (180*aircrafts[j].y_speed) )) {
-					if (aircrafts[i].id != aircrafts[j].id) {
+				if ((aircrafts[i][2] - aircrafts[j][2] <= y_constraint) || (aircrafts[i][2] + (180 * aircrafts[i][5]) == aircrafts[j][2] + (180 * aircrafts[j][5]) )) {
+					if (aircrafts[i][0] != aircrafts[j][0]) {
 						flag_y = true;
-						notify(aircrafts[i]);
+						//notify(aircrafts[i]);
 					}
 				}
 
-				if ((aircrafts[i].z_coor - aircrafts[j].z_coor <= z_constraint) || (aircrafts[i].z_coor + (180 * aircrafts[i].z_speed) == aircrafts[j].z_coor + (180*aircrafts[j].z_speed) )) {
-					if (aircrafts[i].id != aircrafts[j].id) {
+				if ((aircrafts[i][3] - aircrafts[j][3] <= z_constraint) || (aircrafts[i][3] + (180 * aircrafts[i][6]) == aircrafts[j][3] + (180 *aircrafts[j][6]) )) {
+					if (aircrafts[i][0] != aircrafts[j][0]) {
 						flag_z = true;
-						notify(aircrafts[i]);
+						//notify(aircrafts[i]);
 					}
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void ComputerSystem::init() {
 	pthread_create(&thread_id, NULL, computer_start_routine , (void *) this);
+}
+
+int ComputerSystem::send() {
+	int server_coid = 0;
+	if ((server_coid = name_open("display", 0)) == -1) {
+
+	}
+
+	MsgSend(server_coid, &aircrafts, sizeof(aircrafts), NULL, 0);
+	name_close(server_coid);
+	return EXIT_SUCCESS;
 }
 
 void ComputerSystem::notify(my_data_t aircraft) {
@@ -68,31 +88,30 @@ void ComputerSystem::notify(my_data_t aircraft) {
 
 void ComputerSystem::analyze(my_data_t aircraft) {
 	Client client;
-	for (int i = 0; i < aircrafts.size(); i ++) {
-		aircraft.hdr.type = 0x02;
-		std::string in = aircraft.cmd;
-		if (in == "speed") {
-			if (flag_x) {
-				aircraft.x_speed = (aircraft.x_speed)/2;
-			}
-			if (flag_y) {
-				aircraft.y_speed = (aircraft.y_speed)/2;
-			}
-			if (flag_z) {
-				aircraft.z_speed = (aircraft.z_speed)/2;
-			}
-			client.send("com", aircraft);
+	aircraft.hdr.type = 0x02;
+	std::string in = aircraft.cmd;
+	if (in == "speed") {
+		if (flag_x) {
+			aircraft.x_speed = (aircraft.x_speed)/2;
 		}
-		if ( in == "altitude") {
-			aircraft.cmd = "altitude";
+		if (flag_y) {
+			aircraft.y_speed = (aircraft.y_speed)/2;
 		}
-		if (in == "position") {
-			aircraft.cmd = "position";
+		if (flag_z) {
+			aircraft.z_speed = (aircraft.z_speed)/2;
 		}
-		if (in == "display") {
-			aircraft.hdr.subtype = 0x01;
-			aircraft.cmd = "display";
-			client.send("display", aircraft);
-		}
+		std::cout << "sending to com" << std::endl;
+		client.send("com", aircraft);
+	}
+	if ( in == "altitude") {
+		aircraft.cmd = "altitude";
+	}
+	if (in == "position") {
+		aircraft.cmd = "position";
+	}
+	if (in == "display") {
+		aircraft.hdr.subtype = 0x01;
+		aircraft.cmd = "display";
+		client.send("display", aircraft);
 	}
 }

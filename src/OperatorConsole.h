@@ -20,7 +20,6 @@ class OperatorConsole {
 private:
 	 int period_sec;
 	 int period_msec;
-	 my_data_t msg;
 	 my_data_t rcv_data;
 	 bool flag_add = false;
 public:

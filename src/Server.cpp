@@ -13,6 +13,7 @@ Server::Server(const char *ATTACH_POINT) : ATTACH_POINT(ATTACH_POINT) {
 }
 
 my_data_t Server::run() {
+	my_data_t msg;
 	while (1) {
 		rcvid = MsgReceive(attach->chid, &msg, sizeof(msg), NULL);
 		if (rcvid == -1) {
@@ -44,6 +45,46 @@ my_data_t Server::run() {
 
 		MsgReply(rcvid, EOK, 0, sizeof(msg));
 		return msg;
+	}
+	name_detach(attach, 0);
+}
+
+std::vector<my_data_t>  Server::run_() {
+	cTimer timer(5, 0);
+	while (1) {
+		rcvid = MsgReceive(attach->chid, &data, sizeof(data), NULL);
+
+		if (data.size() != 3) {
+			continue;
+		}
+
+		for (auto msg : data) {
+			if (rcvid == 0) {
+				switch (msg.hdr.code) {
+				case _PULSE_CODE_DISCONNECT:
+					ConnectDetach(msg.hdr.scoid);
+					break;
+				case _PULSE_CODE_UNBLOCK:
+					break;
+				default:
+					break;
+				}
+				continue;
+			}
+
+			if (msg.hdr.type == _IO_CONNECT) {
+				MsgReply(rcvid, EOK, NULL, 0);
+				continue;
+			}
+
+			if (msg.hdr.type > _IO_BASE && msg.hdr.type <= _IO_MAX) {
+				MsgError(rcvid, ENOSYS);
+				continue;
+			}
+		}
+		MsgReply(rcvid, EOK, 0, sizeof(data));
+		timer.waitTimer();
+		return data;
 	}
 	name_detach(attach, 0);
 }

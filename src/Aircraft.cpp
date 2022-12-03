@@ -19,6 +19,7 @@ Aircraft::~Aircraft() {
 void * aircraft_start_routine(void *arg) {
 	Aircraft& aircraft = *(Aircraft*) arg;
 	aircraft.update_position();
+	aircraft.rcv_cmd();
 	return NULL;
 }
 
@@ -34,7 +35,21 @@ void Aircraft::update_position() {
 void Aircraft::calculate_position() {
 	x_coor =  x_coor + ((period_sec + ( period_msec/1000)) * x_speed);
 	y_coor =  y_coor + ((period_sec + ( period_msec/1000)) * y_speed);
-	z_coor =  z_coor + ((period_sec + ( period_msec/1000)) * z_speed);
+	//z_coor =  z_coor + ((period_sec + ( period_msec/1000)) * z_speed);
+}
+
+void Aircraft::change_speed(int x_new_speed, int y_new_speed) {
+	x_speed = x_speed + (x_new_speed - x_speed);
+	y_speed = y_speed + (y_new_speed - y_speed);
+}
+
+void Aircraft::change_position(int x_new_coor, int y_new_coor) {
+	int x_coor = x_speed * (period_sec + ( period_msec/1000)) + (x_new_coor - x_coor);
+	int y_coor = y_speed * (period_sec + ( period_msec/1000)) + (y_new_coor - y_coor);
+}
+
+void Aircraft::change_altitude(int z_new_coor) {
+	int z_coor = z_speed * (period_sec + ( period_msec/1000)) + (z_new_coor - z_coor);
 }
 
 void Aircraft::init() {
@@ -43,16 +58,30 @@ void Aircraft::init() {
 
 void Aircraft::rcv_cmd() {
 	Server server(std::to_string(id).c_str());
-	rcv = server.run();
+	while (1) {
+		rcv = server.run();
 
-	if (rcv.hdr.type == 0x01) {
-		// something
+		if (rcv.hdr.type == 0x05) {
+			if (rcv.cmd == "speed") {
+				change_speed(rcv.x_speed,rcv.y_speed);
+				std::cout << "changing speed : " << msg.id << std::endl;
+			}
+
+			if (rcv.cmd == "altitude") {
+				change_altitude(rcv.z_coor);
+				std::cout << "changing altitude " << msg.id << std::endl;
+			}
+
+			if (rcv.cmd == "position") {
+				change_position(rcv.x_coor,rcv.y_coor);
+				std::cout << "changing position " << msg.id << std::endl;
+			}
+		}
+
+		if (rcv.hdr.type == 0x02) {
+			//algorithm
+		}
 	}
-
-	if (rcv.hdr.type == 0x02) {
-		//algorithm
-	}
-
 }
 
 void Aircraft::send_to_radar() {

@@ -18,8 +18,8 @@ void Radar::interrogate() {
 		msg.hdr.type = 0x01;
 		//std::cout << "counter " << msg.id << std::endl;
 		client.send("computer", msg);
-		//timer.waitTimer();
 	}
+	//timer.waitTimer();
 }
 
 void Radar::init() {

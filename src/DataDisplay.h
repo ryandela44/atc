@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "Aircraft.h"
 #include "Airspace.h"
 #include <iostream>
 #include <vector>
@@ -18,18 +17,17 @@
 
 class DataDisplay {
 	friend void * display_start_routine(void* arg);
-	friend void * display_server_start_routine(void* arg);
 private:
     int x, y;
     std::vector <std::tuple<int, int>> positions;
-    std::vector <my_data_t> aircrafts;
+    std::vector<my_data_t> rcv;
     my_airspace airspace;
     int period_sec;
     int period_msec;
-    my_data_t rcv;
     pthread_mutex_t mutex;
 public:
     pthread_t thread_id;
+    pthread_t server_thread_id;
     DataDisplay(int period_sec,int period_msec);
 
     int scale(int param);
