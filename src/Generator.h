@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "Filesystem.h"
 
 class Generator {
 private:
@@ -14,6 +15,7 @@ private:
 	int x_coor;
 	int y_coor;
 	std::vector<std::vector<std::string>> aircrafts;
+	Filesystem filesystem;
 public:
 	int generate_time();
 	int generate_x_value();
@@ -25,4 +27,5 @@ public:
 	int generate_y_speed();
 	int generate_z_speed();
 	std::vector<std::vector<std::string>> load(int size);
+	std::vector<std::vector<int>> generate(int size);
 };

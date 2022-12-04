@@ -9,17 +9,19 @@
 Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, int period_sec,int period_msec)
 : id(id), x_coor(x_coor),
   y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), period_sec(period_sec), period_msec(period_msec){
+	//std::cout << "plane entered airspace " << id << std::endl;
 	init();
 }
 
 Aircraft::~Aircraft() {
+	//std::cout << "plane " << id << " left the airspace " << std::endl;
 	thread_id = NULL;
 }
 
 void * aircraft_start_routine(void *arg) {
 	Aircraft& aircraft = *(Aircraft*) arg;
 	aircraft.update_position();
-	aircraft.rcv_cmd();
+	//aircraft.rcv_cmd();
 	return NULL;
 }
 

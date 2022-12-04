@@ -11,6 +11,7 @@
 #include "cTimer.h"
 #include "Client.h"
 #include "ClientServer.h"
+#include "Logger.h"
 #include "Server.h"
 
 class OperatorConsole {

@@ -14,6 +14,7 @@
 #include <pthread.h>
 #include "cTimer.h"
 #include "Server.h"
+#include "Logger.h"
 
 class DataDisplay {
 	friend void * display_start_routine(void* arg);
@@ -34,7 +35,7 @@ public:
 
     void print();
 
-    void print_aircrafts();
+    void print_aircrafts(Logger log);
 
     void init();
 };

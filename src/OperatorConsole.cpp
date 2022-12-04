@@ -12,14 +12,16 @@ void * console_start_routine(void *arg) {
 }
 
 void * input_console_start_routine(void* arg) {
+	Logger logger ("console");
 	std::string s;
 	Client client;
 	while (1) {
-		std::cout << "enter something " << std::endl;
+		//std::cout << "enter something " << std::endl;
 		std::cin >> s;
 		in = s;
 		if (!s.empty()) {
-			std::cout << s << std::endl;
+			//std::cout << s << std::endl;
+			logger.log(s,"r");
 		}
 
 		if (in.find( "speed") != in.npos) {

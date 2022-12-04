@@ -12,17 +12,17 @@
 #include "Generator.h"
 
 int Generator::generate_time() {
-	int result = 1 + (rand() % 100);
+	int result = 1 + (rand() % 60);
 	return result;
 }
 
 int Generator::generate_x_value() {
-	int result = 0 + (rand() % 10000);
+	int result = 2500 + (rand() % 8000);
 	return result;
 }
 
 int Generator::generate_y_value() {
-	int result = 0 + (rand() % 10000);
+	int result = 2500 + (rand() % 8000);
 	return result;
 }
 
@@ -58,22 +58,22 @@ int Generator::generate_y_coor() {
 }
 
 int Generator::generate_z_coor() {
-	int result = 0 + (rand() % 15000);
+	int result = 2500 + (rand() % 10000);
 	return result;
 }
 
 int Generator::generate_x_speed() {
-	int result = 0 + (rand() % 300);
+	int result = -100 + (rand() % 100);
 	return result;
 }
 
 int Generator::generate_y_speed() {
-	int result = 0 + (rand() % 300);
+	int result = -100 + (rand() % 100);
 	return result;
 }
 
 int Generator::generate_z_speed() {
-	int result = 0 + (rand() % 300);
+	int result = -100 + (rand() % 100);
 	return result;
 }
 
@@ -104,4 +104,25 @@ std::vector<std::vector<std::string>> Generator::load(int size) {
 
 	return aircrafts;
 
+}
+
+std::vector<std::vector<int>> Generator::generate(int size) {
+	auto planes_ = load(size);
+	char* filename = "input.txt";
+	std::string s;
+	const char * content;
+	for (auto p : planes_) {
+		for (int i = 0;  i < p.size();  i++ ) {
+			if (i == p.size()-1) {
+				s.append(p[i]);
+			}
+			else {
+				s.append(p[i] + " , ");
+			}
+		}
+		s.append("\n");
+	}
+	content = s.c_str();
+	filesystem.write_file(filename, content);
+	return filesystem.parse(filename);
 }
