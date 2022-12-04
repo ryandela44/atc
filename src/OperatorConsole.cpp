@@ -22,7 +22,6 @@ void * input_console_start_routine(void* arg) {
 			std::cout << s << std::endl;
 		}
 
-
 		if (in.find( "speed") != in.npos) {
 			msg.cmd = "speed";
 		}
@@ -50,8 +49,8 @@ void * input_console_start_routine(void* arg) {
 void * rcv_console_start_routine(void* arg) {
 	Server server("console");
 	Client client;
-	my_data_t rcv_data = server.run();
 	while (1) {
+		my_data_t rcv_data = server.run();
 		if ( rcv_data.hdr.type == 0x02) {
 			if (in.find( "speed") != in.npos) {
 				rcv_data.cmd = "speed";

@@ -11,12 +11,10 @@ void * computer_start_routine(void *arg) {
 
 void ComputerSystem::compute() {
 	Server server("computer");
-	//cTimer timer(period_sec, period_msec);
 	//Client client;
 
 	while (1) {
 		rcv= server.run();
-		//std::cout<< "id : " << rcv.id << std::endl;
 		if (rcv.hdr.type == 0x01) {
 			rcv.hdr.type = 0x02;
 			aircrafts.push_back(rcv);
@@ -28,42 +26,45 @@ void ComputerSystem::compute() {
 		}
 		//std::cout<< "size : " << aircrafts.size() << std::endl;
 		if (aircrafts.size() == 3) {
+			compute_violation();
 			send();
 			aircrafts.clear();
 		}
-		compute_violation();
-		//timer.waitTimer();
-		//aircrafts.clear();
 	}
 }
 
 void ComputerSystem::compute_violation() {
-	/*	if(!aircrafts.empty() || aircrafts.size() < 2) {
-		for(int i = 0; i < this->aircrafts.size(); i++) {
-			for (int j = 1; j < this->aircrafts.size(); i++) {
-				if ((aircrafts[i][1] - aircrafts[j][1] <= x_constraint) || (aircrafts[i][1] + (180 * aircrafts[i][4]) == aircrafts[j][1] + (180 * aircrafts[j][4]) )) {
-					if (aircrafts[i][0] != aircrafts[j][0]) {
-						flag_x = true;
-						//notify(aircrafts[i]);
-					}
-				}
-
-				if ((aircrafts[i][2] - aircrafts[j][2] <= y_constraint) || (aircrafts[i][2] + (180 * aircrafts[i][5]) == aircrafts[j][2] + (180 * aircrafts[j][5]) )) {
-					if (aircrafts[i][0] != aircrafts[j][0]) {
-						flag_y = true;
-						//notify(aircrafts[i]);
-					}
-				}
-
-				if ((aircrafts[i][3] - aircrafts[j][3] <= z_constraint) || (aircrafts[i][3] + (180 * aircrafts[i][6]) == aircrafts[j][3] + (180 *aircrafts[j][6]) )) {
-					if (aircrafts[i][0] != aircrafts[j][0]) {
-						flag_z = true;
-						//notify(aircrafts[i]);
-					}
-				}
-			}
-		}
-	}*/
+	//cTimer timer(period_sec, period_msec);
+	//while (1) {
+//		if(!aircrafts.empty() || aircrafts.size() < 2) {
+//			for(int i = 0; i < this->aircrafts.size(); i++) {
+//				for (int j = 1; j < this->aircrafts.size(); i++) {
+//					std::cout<< "i : " << aircrafts[i].id << std::endl;
+//					std::cout<< "j : " << aircrafts[j].id << std::endl;\
+//					if (aircrafts[i].id != aircrafts[j].id) {
+//						if ((aircrafts[i].x_coor - aircrafts[j].x_coor <= x_constraint) || (aircrafts[i].x_coor + (180 * aircrafts[i].x_speed) == aircrafts[j].x_coor + (180 * aircrafts[j].x_speed) )) {
+//							flag_x = true;
+//							//notify(aircrafts[i]);
+//						}
+//					}
+//
+//					if (aircrafts[i].id != aircrafts[j].id) {
+//						if ((aircrafts[i].y_coor - aircrafts[j].y_coor <= y_constraint) || (aircrafts[i].y_coor + (180 * aircrafts[i].y_speed) == aircrafts[j].y_coor + (180 * aircrafts[j].y_speed) )) {
+//							flag_y = true;
+//							//notify(aircrafts[i]);
+//						}
+//					}
+//					if (aircrafts[i].id != aircrafts[j].id) {
+//						if ((aircrafts[i].z_coor - aircrafts[j].z_coor <= z_constraint) || (aircrafts[i].z_coor + (180 * aircrafts[i].z_speed) == aircrafts[j].z_coor + (180 *aircrafts[j].z_speed) )) {
+//							flag_z = true;
+//							//notify(aircrafts[i]);
+//						}
+//					}
+//				}
+//			}
+//		}
+	//}
+	//timer.waitTimer();
 }
 
 void ComputerSystem::init() {
@@ -83,6 +84,7 @@ int ComputerSystem::send() {
 
 void ComputerSystem::notify(my_data_t aircraft) {
 	aircraft.hdr.type = 0x02;
+	std::cout << "violation from aircraft " << aircraft.id << std::endl;
 	console.send("operator",aircraft);
 }
 
