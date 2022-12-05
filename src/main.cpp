@@ -8,7 +8,6 @@
 #include "ComputerSystem.h"
 #include "OperatorConsole.h"
 #include "CommunicationSystem.h"
-#include "Timer.h"
 #include "Generator.h"
 
 
@@ -21,9 +20,9 @@ int main() {
 	                                        {0x02, 0, 0, 5000, 200, 200, 200,1,0}};
 	Radar radar(1,0);
 	OperatorConsole console(2,0);
-	ComputerSystem computer(1,0);
+	ComputerSystem computer(1, 0);
 	DataDisplay display(1,0);
-	CommunicationSystem com();
+	CommunicationSystem com;
 	//Generator generator;
 	//std::vector <Aircraft> aircrafts;
 	//auto planes = generator.generate(5);
@@ -45,9 +44,14 @@ int main() {
 	pthread_join(radar.thread_id,NULL);
 	for(auto aircraft : aircrafts) {
 		pthread_join(aircraft.thread_id,NULL);
+		pthread_join(aircraft.server_thread_id,NULL);
 	}
 	pthread_join(computer.thread_id,NULL);
+	pthread_join(computer.thread_server_id, NULL);
 	pthread_join(display.thread_id,NULL);
 	pthread_join(console.thread_id,NULL);
+	pthread_join(console.thread_input_console_id,NULL);
+	pthread_join(com.thread_id,NULL);
+
 	return 0;
 }

@@ -15,9 +15,8 @@
 #include "Server.h"
 
 class OperatorConsole {
-	friend void * aircraft_start_routine(void* arg);
+	friend void * console_start_routine(void* arg);
 	friend void * input_console_start_routine(void* arg);
-	friend void * rcv_console_start_routine(void* arg);
 private:
 	 int period_sec;
 	 int period_msec;
@@ -25,7 +24,6 @@ private:
 	 bool flag_add = false;
 public:
 	pthread_t thread_id;
-	pthread_t thread_rcv_console_id;
 	pthread_t thread_input_console_id;
 	OperatorConsole(int period_sec, int period_msec);
 	void init();

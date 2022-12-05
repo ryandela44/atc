@@ -26,5 +26,5 @@ private:
 public:
 	Server(const char *ATTACH_POINT);
 	my_data_t run();
-	std::vector<my_data_t>  run_();
+	std::vector<my_data_t>  run_(int n);
 };

@@ -11,12 +11,12 @@
 #include <iostream>
 #include "Client.h"
 #include "Server.h"
-#include "Timer.h"
 #include "Airspace.h"
 #include "cTimer.h"
 
-class Aircraft : public Timer{
+class Aircraft{
 	friend void * aircraft_start_routine(void* arg);
+	friend void * aircraft_server_start_routine(void *arg);
 private:
 	uint16_t id;
     int x_coor;
@@ -37,6 +37,7 @@ private:
     Client client;
 public:
     pthread_t thread_id;
+    pthread_t server_thread_id;
 
     Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, int period_sec,int period_msec);
 

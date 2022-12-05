@@ -9,19 +9,22 @@
 Aircraft::Aircraft(uint16_t id, int x_coor, int y_coor, int z_coor, int x_speed, int y_speed, int z_speed, int period_sec,int period_msec)
 : id(id), x_coor(x_coor),
   y_coor(y_coor), z_coor(z_coor), x_speed(x_speed), y_speed(y_speed), z_speed(z_speed), period_sec(period_sec), period_msec(period_msec){
-	//std::cout << "plane entered airspace " << id << std::endl;
 	init();
 }
 
 Aircraft::~Aircraft() {
-	//std::cout << "plane " << id << " left the airspace " << std::endl;
 	thread_id = NULL;
 }
 
 void * aircraft_start_routine(void *arg) {
 	Aircraft& aircraft = *(Aircraft*) arg;
 	aircraft.update_position();
-	//aircraft.rcv_cmd();
+	return NULL;
+}
+
+void * aircraft_server_start_routine(void *arg) {
+	Aircraft& aircraft = *(Aircraft*) arg;
+	aircraft.rcv_cmd();
 	return NULL;
 }
 
@@ -37,7 +40,6 @@ void Aircraft::update_position() {
 void Aircraft::calculate_position() {
 	x_coor =  x_coor + ((period_sec + ( period_msec/1000)) * x_speed);
 	y_coor =  y_coor + ((period_sec + ( period_msec/1000)) * y_speed);
-	//z_coor =  z_coor + ((period_sec + ( period_msec/1000)) * z_speed);
 }
 
 void Aircraft::change_speed(int x_new_speed, int y_new_speed) {
@@ -56,13 +58,14 @@ void Aircraft::change_altitude(int z_new_coor) {
 
 void Aircraft::init() {
 	pthread_create(&thread_id, NULL, aircraft_start_routine , (void *) this);
+	pthread_create(&server_thread_id, NULL,  aircraft_server_start_routine , (void *) this);
 }
 
 void Aircraft::rcv_cmd() {
 	Server server(std::to_string(id).c_str());
 	while (1) {
+		std::cout << "someone : " << msg.id << std::endl;
 		rcv = server.run();
-
 		if (rcv.hdr.type == 0x05) {
 			if (rcv.cmd == "speed") {
 				change_speed(rcv.x_speed,rcv.y_speed);
@@ -79,10 +82,6 @@ void Aircraft::rcv_cmd() {
 				std::cout << "changing position " << msg.id << std::endl;
 			}
 		}
-
-		if (rcv.hdr.type == 0x02) {
-			//algorithm
-		}
 	}
 }
 
@@ -95,7 +94,6 @@ void Aircraft::send_to_radar() {
 	msg.x_speed = x_speed;
 	msg.y_speed = y_speed;
 	msg.z_speed = z_speed;
-	//std::cout << "aircraft " << msg.id << std::endl;
 	client.send("radar", msg);
 	if ((airspace.x_space < x_coor) || (airspace.y_space < y_coor) || (airspace.z_space < z_coor)) {
 		flag = false;

@@ -12,76 +12,51 @@ void * console_start_routine(void *arg) {
 }
 
 void * input_console_start_routine(void* arg) {
-	Logger logger ("console");
-	std::string s;
+	Logger logger("console");
 	Client client;
+	std::string s;
+
 	while (1) {
-		//std::cout << "enter something " << std::endl;
 		std::cin >> s;
 		in = s;
+		my_data_t rcv_data = msg;
+
 		if (!s.empty()) {
-			//std::cout << s << std::endl;
 			logger.log(s,"r");
 		}
 
 		if (in.find( "speed") != in.npos) {
-			msg.cmd = "speed";
+			rcv_data.cmd = "speed";
 		}
+
 		if (in.find("altitude") != in.npos) {
-			msg.cmd = "altitude";
+			rcv_data.cmd = "altitude";
 		}
+
 		if (in.find("position")!= in.npos) {
-			msg.cmd = "position";
-		}
-		if (in.find("display") != in.npos) {
-			msg.hdr.type = 0x04;
-			msg.cmd = "display";
-			client.send("computer", msg);
+			rcv_data.cmd = "position";
 		}
 
-		if (!msg.cmd.empty()) {
-			msg.hdr.type = 0x04;
-			std::cout << "sending data " << std::endl;
-			client.send("computer",msg);
-		}
+		rcv_data.hdr.type = 0x04;
+		std::cout << "sending data " << std::endl;
+		client.send("computer",rcv_data);
 	}
-	return NULL;
-}
 
-void * rcv_console_start_routine(void* arg) {
-	Server server("console");
-	Client client;
-	while (1) {
-		my_data_t rcv_data = server.run();
-		if ( rcv_data.hdr.type == 0x02) {
-			if (in.find( "speed") != in.npos) {
-				rcv_data.cmd = "speed";
-			}
-			if (in.find("altitude") != in.npos) {
-				rcv_data.cmd = "altitude";
-			}
-			if (in.find("position")!= in.npos) {
-				rcv_data.cmd = "position";
-			}
-			rcv_data.hdr.type = 0x04;
-			client.send("computer",rcv_data);
-		}
-	}
 	return NULL;
 }
 
 void OperatorConsole::init() {
 	pthread_create(&thread_id, NULL, console_start_routine , (void *) this);
+	pthread_create(&thread_input_console_id, NULL, input_console_start_routine , (void *) this);
 }
 
 void OperatorConsole::send() {
-	//cTimer timer(period_sec,period_msec);
+	Server server("console");
 	Client client;
-	pthread_create(&thread_input_console_id,NULL,input_console_start_routine,NULL);
-	pthread_join(thread_input_console_id,NULL);
-	pthread_create(&thread_rcv_console_id,NULL,rcv_console_start_routine,NULL);
-	pthread_join(thread_rcv_console_id,NULL);
-	//timer.waitTimer();
+
+	while (1) {
+		msg = server.run();
+	}
 }
 
 

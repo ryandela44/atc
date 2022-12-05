@@ -17,7 +17,7 @@ void DataDisplay::print() {
 	Server server("display");
 	Logger logger("log");
 	while (1) {
-		rcv = server.run_();
+		rcv = server.run_(5);
 		print_aircrafts(logger);
 	}
 }

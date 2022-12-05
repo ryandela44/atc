@@ -10,16 +10,13 @@ void * radar_start_routine(void *arg) {
 }
 
 void Radar::interrogate() {
-	//cTimer timer(period_sec, period_msec);
+	// Received signals from aircrafts in the airspace.
 	Server server("radar");
-	//std::vector<my_data_t> msg_v;
 	while (1) {
 		msg = server.run();
 		msg.hdr.type = 0x01;
-		//std::cout << "counter " << msg.id << std::endl;
 		client.send("computer", msg);
 	}
-	//timer.waitTimer();
 }
 
 void Radar::init() {
